@@ -344,7 +344,7 @@
     }
 
     .start-box{
-      width:min(720px, 100%);
+      width:min(760px, 100%);
       background:#111827;
       border:1px solid rgba(255,255,255,.1);
       border-radius:18px;
@@ -414,11 +414,16 @@
   <div class="start-screen" id="startScreen" style="display:none;">
     <div class="start-box">
       <h2>Start gry</h2>
-      <div class="small">Wpisz imię ucznia i wybierz zestaw tłumaczeń.</div>
+      <div class="small">Najpierw wybierz klasę / grupę, potem zestaw zdań.</div>
 
       <div style="margin-top:12px;">
         <label for="studentNameInput">Imię ucznia</label>
         <input type="text" id="studentNameInput" placeholder="Np. Jan" />
+      </div>
+
+      <div style="margin-top:12px;">
+        <label for="classSelect">Klasa / grupa</label>
+        <select id="classSelect"></select>
       </div>
 
       <div style="margin-top:12px;">
@@ -646,8 +651,9 @@
 
     const startScreen = document.getElementById("startScreen");
     const studentNameInput = document.getElementById("studentNameInput");
-    const startGameBtn = document.getElementById("startGameBtn");
+    const classSelect = document.getElementById("classSelect");
     const datasetSelect = document.getElementById("datasetSelect");
+    const startGameBtn = document.getElementById("startGameBtn");
 
     let config = null;
     let allSets = [];
@@ -736,25 +742,59 @@
       }
     }
 
-    function fillDatasetSelect(){
-      datasetSelect.innerHTML = "";
+    function getUniqueClassLabels(){
+      const labels = allSets
+        .map(set => String(set.classLabel || "").trim())
+        .filter(Boolean);
 
-      const filteredSets = allSets.filter(set => {
-        if(!config.settings.defaultClassLabel) return true;
-        return !set.classLabel || set.classLabel === config.settings.defaultClassLabel;
+      const unique = [...new Set(labels)].sort((a, b) => a.localeCompare(b, "pl"));
+
+      if(unique.length === 0){
+        return ["Bez klasy"];
+      }
+
+      return unique;
+    }
+
+    function fillClassSelect(){
+      const classLabels = getUniqueClassLabels();
+      classSelect.innerHTML = "";
+
+      classLabels.forEach(label => {
+        const option = document.createElement("option");
+        option.value = label;
+        option.textContent = label;
+        classSelect.appendChild(option);
       });
 
-      const finalSets = filteredSets.length > 0 ? filteredSets : allSets;
+      const preferred = config.settings.defaultClassLabel;
+      if(preferred && classLabels.includes(preferred)){
+        classSelect.value = preferred;
+      } else {
+        classSelect.selectedIndex = 0;
+      }
+    }
+
+    function fillDatasetSelectForSelectedClass(){
+      datasetSelect.innerHTML = "";
+      const selectedClass = classSelect.value;
+
+      const setsForClass = allSets.filter(set => {
+        const label = String(set.classLabel || "").trim() || "Bez klasy";
+        return label === selectedClass;
+      });
+
+      const finalSets = setsForClass.length > 0 ? setsForClass : allSets;
 
       finalSets.forEach((set, index) => {
         const option = document.createElement("option");
         option.value = set.id;
-        option.textContent = `${set.name}${set.classLabel ? " (" + set.classLabel + ")" : ""}`;
+        option.textContent = set.name + (set.theme ? " - " + set.theme : "");
         if(index === 0) option.selected = true;
         datasetSelect.appendChild(option);
       });
 
-      datasetSelect.parentElement.style.display = config.settings.showSetPicker ? "block" : "none";
+      datasetSelect.parentElement.style.display = config.settings.showSetPicker ? "block" : "block";
     }
 
     function setMessage(text, type = "info"){
@@ -1518,6 +1558,11 @@ ${wrongText}`;
         return;
       }
 
+      if(!datasetSelect.value){
+        alert("Wybierz klasę i zestaw.");
+        return;
+      }
+
       studentName = studentNameInput.value.trim();
       chooseActiveSet();
       startScreen.style.display = "none";
@@ -1548,6 +1593,7 @@ ${wrongText}`;
     exportCsvBtn.addEventListener("click", exportReportCsv);
     printReportBtn.addEventListener("click", printReport);
 
+    classSelect.addEventListener("change", fillDatasetSelectForSelectedClass);
     startGameBtn.addEventListener("click", startGame);
 
     document.addEventListener("fullscreenchange", updateFullscreenButton);
@@ -1574,7 +1620,8 @@ ${wrongText}`;
       };
 
       allSets = data.sets.slice();
-      fillDatasetSelect();
+      fillClassSelect();
+      fillDatasetSelectForSelectedClass();
       updateScore();
       updateTopInfo();
 
