@@ -59,18 +59,6 @@
           "target": "Jak się masz?"
         }
       ]
-    },
-    {
-      "id": "nowy_zestaw",
-      "name": "Japonski",
-      "classLabel": "Klasa 5",
-      "theme": "japonski",
-      "pairs": [
-        {
-          "source": "僕 の 名前 は 田中さん。",
-          "target": "Mam na imie Tanaka."
-        }
-      ]
     }
   ]
 }
