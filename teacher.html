@@ -230,7 +230,7 @@
     <div class="topbar">
       <div>
         <div class="title">Panel nauczyciela B+++ Teacher PRO custom class</div>
-        <div class="small">Dowolna własna klasa lub grupa, edytor tabelkowy, CSV, filtry i eksport zestawów.</div>
+        <div class="small">Panel startuje od aktualnej zawartości pliku sentences.json.</div>
       </div>
       <a href="index.html">Otwórz grę studenta</a>
     </div>
@@ -429,7 +429,7 @@ How are you? = Jak się masz?"></textarea>
           <br><code>setId,setName,classLabel,theme,source,target</code>
         </div>
 
-        <div class="message info" id="message">Dodaj zestawy i pobierz gotowy plik JSON.</div>
+        <div class="message info" id="message">Ładowanie danych...</div>
       </div>
     </div>
 
@@ -875,7 +875,7 @@ How are you? = Jak się masz?"></textarea>
 
       const s = data.settings || {};
       difficulty.value = s.difficulty || "medium";
-      defaultClassLabel.value = s.defaultClassLabel || "5A";
+      defaultClassLabel.value = s.defaultClassLabel || "";
       spawnRate.value = String(s.spawnRate ?? 1100);
       timerSeconds.value = String(s.timerSeconds ?? 45);
       maxMistakes.value = String(s.maxMistakes ?? 5);
@@ -955,6 +955,52 @@ How are you? = Jak się masz?"></textarea>
         jsonOutput.select();
         document.execCommand("copy");
         setMessage("JSON skopiowany do schowka.", "ok");
+      }
+    }
+
+    async function loadSentencesJsonAtStart(){
+      try{
+        const response = await fetch("sentences.json", { cache: "no-store" });
+        if(!response.ok){
+          throw new Error("Brak pliku sentences.json albo nie udało się go odczytać.");
+        }
+
+        const data = await response.json();
+
+        if(!data || !Array.isArray(data.sets)){
+          throw new Error("Plik sentences.json ma niepoprawny format.");
+        }
+
+        applyData(data);
+        setMessage("Wczytano aktualne dane z pliku sentences.json.", "ok");
+      } catch(error){
+        console.error(error);
+
+        applyData({
+          title: "Tłumaczenie zdań EN-PL",
+          settings: {
+            difficulty: "medium",
+            defaultClassLabel: "5A",
+            spawnRate: 1100,
+            timerSeconds: 45,
+            maxMistakes: 5,
+            randomOrder: false,
+            autoNextSeconds: 3,
+            soundEnabled: true,
+            studentNameMode: true,
+            showSetPicker: true,
+            allowHint: true,
+            allowSolution: false,
+            showTranslationInstruction: true,
+            sourceLanguageLabel: "English",
+            targetLanguageLabel: "Polski",
+            distractorCount: 4,
+            punctuationMode: "auto"
+          },
+          sets: demoSets
+        });
+
+        setMessage("Nie udało się wczytać sentences.json. Załadowano dane przykładowe.", "err");
       }
     }
 
@@ -1087,31 +1133,7 @@ How are you? = Jak się masz?"></textarea>
       }
     });
 
-    (function init(){
-      applyData({
-        title: "Tłumaczenie zdań EN-PL",
-        settings: {
-          difficulty: "medium",
-          defaultClassLabel: "5A",
-          spawnRate: 1100,
-          timerSeconds: 45,
-          maxMistakes: 5,
-          randomOrder: false,
-          autoNextSeconds: 3,
-          soundEnabled: true,
-          studentNameMode: true,
-          showSetPicker: true,
-          allowHint: true,
-          allowSolution: false,
-          showTranslationInstruction: true,
-          sourceLanguageLabel: "English",
-          targetLanguageLabel: "Polski",
-          distractorCount: 4,
-          punctuationMode: "auto"
-        },
-        sets: demoSets
-      });
-    })();
+    loadSentencesJsonAtStart();
   </script>
 </body>
 </html>
