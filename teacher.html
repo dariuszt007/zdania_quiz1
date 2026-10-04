@@ -269,6 +269,10 @@
           </div>
         </div>
 
+        <div class="actions">
+          <button class="warning" id="swapAllLanguagesBtn">Zamień języki we wszystkich zestawach</button>
+        </div>
+
         <div class="row-3">
           <div>
             <label for="spawnRate">Czas pojawiania się kafelków</label>
@@ -457,6 +461,7 @@ How are you? = Jak się masz?"></textarea>
         <span class="pill">Własna klasa</span>
         <span class="pill">Edytor tabelkowy</span>
         <span class="pill">CSV</span>
+        <span class="pill">Zamiana języków</span>
       </div>
 
       <div class="actions">
@@ -543,6 +548,7 @@ How are you? = Jak się masz?"></textarea>
     const addEmptySetBtn = document.getElementById("addEmptySetBtn");
     const sortSetsBtn = document.getElementById("sortSetsBtn");
     const clearSetsBtn = document.getElementById("clearSetsBtn");
+    const swapAllLanguagesBtn = document.getElementById("swapAllLanguagesBtn");
 
     const filterClassLabel = document.getElementById("filterClassLabel");
     const filterTheme = document.getElementById("filterTheme");
@@ -686,6 +692,42 @@ How are you? = Jak się masz?"></textarea>
       });
     }
 
+    function swapLanguageLabels(){
+      const oldSource = sourceLanguageLabel.value;
+      sourceLanguageLabel.value = targetLanguageLabel.value;
+      targetLanguageLabel.value = oldSource;
+    }
+
+    function swapLanguagesInSet(index){
+      if(!sets[index] || !Array.isArray(sets[index].pairs)) return;
+
+      sets[index].pairs = sets[index].pairs.map(pair => ({
+        source: pair.target,
+        target: pair.source
+      }));
+
+      renderSets();
+      updateJsonPreview();
+      setMessage("Zamieniono source i target w wybranym zestawie.", "ok");
+    }
+
+    function swapLanguagesInAllSets(){
+      sets = sets.map(set => ({
+        ...set,
+        pairs: Array.isArray(set.pairs)
+          ? set.pairs.map(pair => ({
+              source: pair.target,
+              target: pair.source
+            }))
+          : []
+      }));
+
+      swapLanguageLabels();
+      renderSets();
+      updateJsonPreview();
+      setMessage("Zamieniono source i target we wszystkich zestawach oraz etykiety języków.", "ok");
+    }
+
     function renderSets(){
       setList.innerHTML = "";
 
@@ -698,9 +740,6 @@ How are you? = Jak się masz?"></textarea>
       visibleSets.forEach(set => {
         const realIndex = sets.findIndex(s => s.id === set.id && s.name === set.name);
 
-        const box = document.createElement("div");
-        box.className = "set-item";
-
         const rowsHtml = (set.pairs || []).map((pair, pairIndex) => `
           <tr>
             <td><input class="pair-input" type="text" value="${escapeHtmlAttr(pair.source)}" data-pair-field="source" data-set-index="${realIndex}" data-pair-index="${pairIndex}"></td>
@@ -709,6 +748,8 @@ How are you? = Jak się masz?"></textarea>
           </tr>
         `).join("");
 
+        const box = document.createElement("div");
+        box.className = "set-item";
         box.innerHTML = `
           <div class="set-header">
             <input type="text" value="${escapeHtmlAttr(set.id)}" placeholder="ID zestawu" data-field="id" data-index="${realIndex}">
@@ -723,7 +764,7 @@ How are you? = Jak się masz?"></textarea>
               <thead>
                 <tr>
                   <th>Zdanie źródłowe</th>
-                  <th>Tłumaczenie po polsku</th>
+                  <th>Tłumaczenie docelowe</th>
                   <th>Akcja</th>
                 </tr>
               </thead>
@@ -734,12 +775,12 @@ How are you? = Jak się masz?"></textarea>
             <div class="actions">
               <button class="success" data-action="addPair" data-index="${realIndex}">Dodaj parę</button>
               <button class="secondary" data-action="duplicateSet" data-index="${realIndex}">Duplikuj</button>
+              <button class="warning" data-action="swapSetLanguages" data-index="${realIndex}">Zamień języki</button>
               <button class="secondary" data-action="upSet" data-index="${realIndex}">Przesuń w górę</button>
               <button class="secondary" data-action="downSet" data-index="${realIndex}">Przesuń w dół</button>
             </div>
           </div>
         `;
-
         setList.appendChild(box);
       });
 
@@ -780,6 +821,9 @@ How are you? = Jak się masz?"></textarea>
             sets.splice(i + 1, 0, JSON.parse(JSON.stringify(sets[i])));
             sets[i + 1].id = sets[i + 1].id + "_copy";
             sets[i + 1].name = sets[i + 1].name + " kopia";
+          } else if(action === "swapSetLanguages"){
+            swapLanguagesInSet(i);
+            return;
           } else if(action === "upSet" && i > 0){
             [sets[i - 1], sets[i]] = [sets[i], sets[i - 1]];
           } else if(action === "downSet" && i < sets.length - 1){
@@ -1055,6 +1099,10 @@ How are you? = Jak się masz?"></textarea>
       renderSets();
       updateJsonPreview();
       setMessage("Usunięto wszystkie zestawy.", "info");
+    });
+
+    swapAllLanguagesBtn.addEventListener("click", () => {
+      swapLanguagesInAllSets();
     });
 
     filterClassLabel.addEventListener("input", renderSets);
