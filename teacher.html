@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>teacher.html - Panel nauczyciela B+++ Teacher PRO</title>
+  <title>teacher.html - Panel nauczyciela B+++ Teacher PRO custom class</title>
   <style>
     :root{
       --bg:#0f172a;
@@ -229,8 +229,8 @@
   <div class="container">
     <div class="topbar">
       <div>
-        <div class="title">Panel nauczyciela B+++ Teacher PRO</div>
-        <div class="small">Edytor tabelkowy, import CSV, filtry, eksport pojedynczych zestawów JSON.</div>
+        <div class="title">Panel nauczyciela B+++ Teacher PRO custom class</div>
+        <div class="small">Dowolna własna klasa lub grupa, edytor tabelkowy, CSV, filtry i eksport zestawów.</div>
       </div>
       <a href="index.html">Otwórz grę studenta</a>
     </div>
@@ -256,11 +256,8 @@
 
         <div class="row-3">
           <div>
-            <label for="schoolLevel">Domyślny poziom klas</label>
-            <select id="schoolLevel">
-              <option value="1-3">Klasy 1-3</option>
-              <option value="4-8" selected>Klasy 4-8</option>
-            </select>
+            <label for="defaultClassLabel">Domyślna klasa / grupa</label>
+            <input id="defaultClassLabel" type="text" value="5A" placeholder="Np. 5A, 2B, grupa początkująca" />
           </div>
           <div>
             <label for="sourceLanguageLabel">Język źródłowy</label>
@@ -405,11 +402,8 @@
 
         <div class="row">
           <div>
-            <label for="newSetLevel">Poziom klas</label>
-            <select id="newSetLevel">
-              <option value="1-3">Klasy 1-3</option>
-              <option value="4-8" selected>Klasy 4-8</option>
-            </select>
+            <label for="newSetClassLabel">Klasa / grupa</label>
+            <input id="newSetClassLabel" type="text" placeholder="Np. 5A, 2B, grupa początkująca" />
           </div>
           <div>
             <label for="newSetTheme">Temat</label>
@@ -432,7 +426,7 @@ How are you? = Jak się masz?"></textarea>
 
         <div class="note small">
           CSV powinno mieć kolumny:
-          <br><code>setId,setName,level,theme,source,target</code>
+          <br><code>setId,setName,classLabel,theme,source,target</code>
         </div>
 
         <div class="message info" id="message">Dodaj zestawy i pobierz gotowy plik JSON.</div>
@@ -443,12 +437,8 @@ How are you? = Jak się masz?"></textarea>
       <h2>3. Filtry zestawów</h2>
       <div class="filter-bar">
         <div>
-          <label for="filterLevel">Filtr poziomu klas</label>
-          <select id="filterLevel">
-            <option value="">Wszystkie</option>
-            <option value="1-3">Klasy 1-3</option>
-            <option value="4-8">Klasy 4-8</option>
-          </select>
+          <label for="filterClassLabel">Filtr klasy / grupy</label>
+          <input id="filterClassLabel" type="text" placeholder="Np. 5A" />
         </div>
         <div>
           <label for="filterTheme">Filtr tematu</label>
@@ -464,8 +454,9 @@ How are you? = Jak się masz?"></textarea>
     <div class="card" style="margin-top:16px;">
       <h2>4. Zestawy tłumaczeń</h2>
       <div>
+        <span class="pill">Własna klasa</span>
         <span class="pill">Edytor tabelkowy</span>
-        <span class="pill">Import CSV</span>
+        <span class="pill">CSV</span>
         <span class="pill">Eksport pojedynczego zestawu</span>
       </div>
 
@@ -498,7 +489,7 @@ How are you? = Jak się masz?"></textarea>
       {
         id: "english_polish_basic",
         name: "English -> Polski podstawy",
-        level: "4-8",
+        classLabel: "5A",
         theme: "school",
         pairs: [
           { source: "I like apples.", target: "Lubię jabłka." },
@@ -509,7 +500,7 @@ How are you? = Jak się masz?"></textarea>
       {
         id: "daily_phrases",
         name: "Codzienne zwroty",
-        level: "1-3",
+        classLabel: "grupa początkująca",
         theme: "daily life",
         pairs: [
           { source: "Good morning!", target: "Dzień dobry!" },
@@ -521,7 +512,7 @@ How are you? = Jak się masz?"></textarea>
 
     const gameTitle = document.getElementById("gameTitle");
     const difficulty = document.getElementById("difficulty");
-    const schoolLevel = document.getElementById("schoolLevel");
+    const defaultClassLabel = document.getElementById("defaultClassLabel");
     const spawnRate = document.getElementById("spawnRate");
     const timerSeconds = document.getElementById("timerSeconds");
     const maxMistakes = document.getElementById("maxMistakes");
@@ -540,7 +531,7 @@ How are you? = Jak się masz?"></textarea>
 
     const newSetId = document.getElementById("newSetId");
     const newSetName = document.getElementById("newSetName");
-    const newSetLevel = document.getElementById("newSetLevel");
+    const newSetClassLabel = document.getElementById("newSetClassLabel");
     const newSetTheme = document.getElementById("newSetTheme");
     const newSetPairs = document.getElementById("newSetPairs");
 
@@ -554,7 +545,7 @@ How are you? = Jak się masz?"></textarea>
     const sortSetsBtn = document.getElementById("sortSetsBtn");
     const clearSetsBtn = document.getElementById("clearSetsBtn");
 
-    const filterLevel = document.getElementById("filterLevel");
+    const filterClassLabel = document.getElementById("filterClassLabel");
     const filterTheme = document.getElementById("filterTheme");
     const clearFiltersBtn = document.getElementById("clearFiltersBtn");
 
@@ -614,13 +605,13 @@ How are you? = Jak się masz?"></textarea>
 
       const idxSetId = getIndex("setId");
       const idxSetName = getIndex("setName");
-      const idxLevel = getIndex("level");
+      const idxClassLabel = getIndex("classLabel");
       const idxTheme = getIndex("theme");
       const idxSource = getIndex("source");
       const idxTarget = getIndex("target");
 
-      if([idxSetId, idxSetName, idxLevel, idxTheme, idxSource, idxTarget].some(i => i === -1)){
-        throw new Error("CSV musi mieć kolumny: setId,setName,level,theme,source,target");
+      if([idxSetId, idxSetName, idxClassLabel, idxTheme, idxSource, idxTarget].some(i => i === -1)){
+        throw new Error("CSV musi mieć kolumny: setId,setName,classLabel,theme,source,target");
       }
 
       const grouped = {};
@@ -628,7 +619,7 @@ How are you? = Jak się masz?"></textarea>
       body.forEach(row => {
         const setId = sanitizeId(row[idxSetId] || "");
         const setName = cleanText(row[idxSetName] || "");
-        const level = cleanText(row[idxLevel] || "4-8");
+        const classLabel = cleanText(row[idxClassLabel] || "");
         const theme = cleanText(row[idxTheme] || "");
         const source = cleanText(row[idxSource] || "");
         const target = cleanText(row[idxTarget] || "");
@@ -639,7 +630,7 @@ How are you? = Jak się masz?"></textarea>
           grouped[setId] = {
             id: setId,
             name: setName,
-            level,
+            classLabel,
             theme,
             pairs: []
           };
@@ -688,10 +679,11 @@ How are you? = Jak się masz?"></textarea>
 
     function filteredSets(){
       return sets.filter(set => {
-        const levelOk = !filterLevel.value || set.level === filterLevel.value;
+        const classOk = !filterClassLabel.value.trim() ||
+          String(set.classLabel || "").toLowerCase().includes(filterClassLabel.value.trim().toLowerCase());
         const themeOk = !filterTheme.value.trim() ||
           String(set.theme || "").toLowerCase().includes(filterTheme.value.trim().toLowerCase());
-        return levelOk && themeOk;
+        return classOk && themeOk;
       });
     }
 
@@ -722,10 +714,7 @@ How are you? = Jak się masz?"></textarea>
           <div class="set-header">
             <input type="text" value="${escapeHtmlAttr(set.id)}" placeholder="ID zestawu" data-field="id" data-index="${realIndex}">
             <input type="text" value="${escapeHtmlAttr(set.name)}" placeholder="Nazwa zestawu" data-field="name" data-index="${realIndex}">
-            <select data-field="level" data-index="${realIndex}">
-              <option value="1-3" ${set.level === "1-3" ? "selected" : ""}>Klasy 1-3</option>
-              <option value="4-8" ${set.level === "4-8" ? "selected" : ""}>Klasy 4-8</option>
-            </select>
+            <input type="text" value="${escapeHtmlAttr(set.classLabel || "")}" placeholder="Klasa / grupa" data-field="classLabel" data-index="${realIndex}">
             <input type="text" value="${escapeHtmlAttr(set.theme || "")}" placeholder="Temat zestawu" data-field="theme" data-index="${realIndex}">
             <button class="secondary" data-action="exportSet" data-index="${realIndex}">Eksport JSON</button>
             <button class="danger" data-action="removeSet" data-index="${realIndex}">Usuń</button>
@@ -761,7 +750,7 @@ How are you? = Jak się masz?"></textarea>
     }
 
     function bindSetEvents(){
-      setList.querySelectorAll("[data-field='id'], [data-field='name'], [data-field='theme'], [data-field='level']").forEach(input => {
+      setList.querySelectorAll("[data-field='id'], [data-field='name'], [data-field='theme'], [data-field='classLabel']").forEach(input => {
         input.addEventListener("input", e => {
           const i = Number(e.target.dataset.index);
           const field = e.target.dataset.field;
@@ -816,7 +805,7 @@ How are you? = Jak się masz?"></textarea>
         .map(set => ({
           id: sanitizeId(set.id),
           name: cleanText(set.name),
-          level: cleanText(set.level || "4-8"),
+          classLabel: cleanText(set.classLabel || ""),
           theme: cleanText(set.theme || ""),
           pairs: (set.pairs || [])
             .map(pair => ({
@@ -836,7 +825,7 @@ How are you? = Jak się masz?"></textarea>
         title: cleanText(gameTitle.value) || "Tłumaczenie zdań",
         settings: {
           difficulty: difficulty.value,
-          schoolLevel: schoolLevel.value,
+          defaultClassLabel: cleanText(defaultClassLabel.value) || "",
           spawnRate: Number(spawnRate.value),
           timerSeconds: Number(timerSeconds.value),
           maxMistakes: Number(maxMistakes.value),
@@ -866,11 +855,11 @@ How are you? = Jak się masz?"></textarea>
       jsonOutput.value = JSON.stringify(data, null, 2);
     }
 
-    function addSet(id, name, level, theme, pairs){
+    function addSet(id, name, classLabel, theme, pairs){
       sets.push({
         id: sanitizeId(id),
         name: cleanText(name),
-        level: cleanText(level || "4-8"),
+        classLabel: cleanText(classLabel || ""),
         theme: cleanText(theme || ""),
         pairs: (pairs || []).map(pair => ({
           source: cleanText(pair.source),
@@ -886,7 +875,7 @@ How are you? = Jak się masz?"></textarea>
 
       const s = data.settings || {};
       difficulty.value = s.difficulty || "medium";
-      schoolLevel.value = s.schoolLevel || "4-8";
+      defaultClassLabel.value = s.defaultClassLabel || "5A";
       spawnRate.value = String(s.spawnRate ?? 1100);
       timerSeconds.value = String(s.timerSeconds ?? 45);
       maxMistakes.value = String(s.maxMistakes ?? 5);
@@ -906,7 +895,7 @@ How are you? = Jak się masz?"></textarea>
       sets = Array.isArray(data.sets) ? data.sets.map(set => ({
         id: sanitizeId(set.id || ""),
         name: cleanText(set.name || ""),
-        level: cleanText(set.level || "4-8"),
+        classLabel: cleanText(set.classLabel || ""),
         theme: cleanText(set.theme || ""),
         pairs: Array.isArray(set.pairs)
           ? set.pairs.map(pair => ({
@@ -942,7 +931,7 @@ How are you? = Jak się masz?"></textarea>
         sets: [{
           id: sanitizeId(set.id),
           name: cleanText(set.name),
-          level: cleanText(set.level || "4-8"),
+          classLabel: cleanText(set.classLabel || ""),
           theme: cleanText(set.theme || ""),
           pairs: (set.pairs || []).map(pair => ({
             source: cleanText(pair.source),
@@ -972,7 +961,7 @@ How are you? = Jak się masz?"></textarea>
     addSetBtn.addEventListener("click", () => {
       const id = newSetId.value;
       const name = newSetName.value;
-      const level = newSetLevel.value;
+      const classLabel = newSetClassLabel.value;
       const theme = newSetTheme.value;
       const pairs = parsePairsFromTextarea(newSetPairs.value);
 
@@ -986,7 +975,7 @@ How are you? = Jak się masz?"></textarea>
         return;
       }
 
-      addSet(id, name, level, theme, pairs);
+      addSet(id, name, classLabel, theme, pairs);
       setMessage("Dodano zestaw.", "ok");
     });
 
@@ -1025,14 +1014,14 @@ How are you? = Jak się masz?"></textarea>
     clearNewSetBtn.addEventListener("click", () => {
       newSetId.value = "";
       newSetName.value = "";
-      newSetLevel.value = "4-8";
+      newSetClassLabel.value = "";
       newSetTheme.value = "";
       newSetPairs.value = "";
       setMessage("Wyczyszczono pola nowego zestawu.", "info");
     });
 
     addEmptySetBtn.addEventListener("click", () => {
-      addSet("nowy_zestaw", "Nowy zestaw", "4-8", "", []);
+      addSet("nowy_zestaw", "Nowy zestaw", "", "", []);
     });
 
     sortSetsBtn.addEventListener("click", () => {
@@ -1049,11 +1038,11 @@ How are you? = Jak się masz?"></textarea>
       setMessage("Usunięto wszystkie zestawy.", "info");
     });
 
-    filterLevel.addEventListener("input", renderSets);
+    filterClassLabel.addEventListener("input", renderSets);
     filterTheme.addEventListener("input", renderSets);
 
     clearFiltersBtn.addEventListener("click", () => {
-      filterLevel.value = "";
+      filterClassLabel.value = "";
       filterTheme.value = "";
       renderSets();
     });
@@ -1103,7 +1092,7 @@ How are you? = Jak się masz?"></textarea>
         title: "Tłumaczenie zdań EN-PL",
         settings: {
           difficulty: "medium",
-          schoolLevel: "4-8",
+          defaultClassLabel: "5A",
           spawnRate: 1100,
           timerSeconds: 45,
           maxMistakes: 5,
