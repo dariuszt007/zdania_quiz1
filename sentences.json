@@ -2,28 +2,28 @@
   "title": "Tłumaczenie zdań EN-PL",
   "settings": {
     "difficulty": "medium",
-    "defaultClassLabel": "5A",
-    "spawnRate": 1100,
-    "timerSeconds": 45,
+    "defaultClassLabel": "Klasa 5",
+    "spawnRate": 1500,
+    "timerSeconds": 0,
     "maxMistakes": 5,
-    "randomOrder": false,
+    "randomOrder": true,
     "autoNextSeconds": 3,
     "soundEnabled": true,
     "studentNameMode": true,
     "showSetPicker": true,
     "allowHint": true,
-    "allowSolution": false,
+    "allowSolution": true,
     "showTranslationInstruction": true,
     "sourceLanguageLabel": "English",
     "targetLanguageLabel": "Polski",
-    "distractorCount": 4,
+    "distractorCount": 2,
     "punctuationMode": "auto"
   },
   "sets": [
     {
       "id": "english_polish_basic",
       "name": "English -> Polski podstawy",
-      "classLabel": "5A",
+      "classLabel": "Klasa 5",
       "theme": "school",
       "pairs": [
         {
@@ -43,7 +43,7 @@
     {
       "id": "english_polish_basic_copy",
       "name": "English -> Polski sredni",
-      "classLabel": "5A",
+      "classLabel": "Klasa 5",
       "theme": "school",
       "pairs": [
         {
