@@ -79,6 +79,26 @@
           "target": "Jak się masz?"
         }
       ]
+    },
+    {
+      "id": "daily_phrases_copy",
+      "name": "Gotowanie",
+      "classLabel": "grupa początkująca",
+      "theme": "daily life",
+      "pairs": [
+        {
+          "source": "Good morning!",
+          "target": "Dzień dobry!"
+        },
+        {
+          "source": "See you tomorrow.",
+          "target": "Do zobaczenia jutro."
+        },
+        {
+          "source": "How are you?",
+          "target": "Jak się masz?"
+        }
+      ]
     }
   ]
 }
