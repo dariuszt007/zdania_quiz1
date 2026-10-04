@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>teacher.html - Panel nauczyciela B+++ Teacher PRO</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#38bdf8;
+      --success:#22c55e;
+      --danger:#ef4444;
+      --warning:#f59e0b;
+      --border:rgba(148,163,184,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:linear-gradient(180deg,#0f172a 0%,#111827 100%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .container{
+      max-width:1540px;
+      margin:0 auto;
+      padding:20px;
+    }
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+    .title{
+      font-size:30px;
+      font-weight:bold;
+    }
+    .topbar a{
+      text-decoration:none;
+      color:white;
+      background:var(--accent);
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:bold;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    @media (min-width:1150px){
+      .grid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+    .card{
+      background:rgba(17,24,39,.94);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 8px 20px rgba(0,0,0,.24);
+    }
+    h1,h2,h3{margin-top:0}
+    label{
+      display:block;
+      margin-bottom:8px;
+      font-weight:bold;
+    }
+    input, textarea, select{
+      width:100%;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background:#0b1220;
+      color:var(--text);
+      padding:12px;
+      font-size:15px;
+    }
+    textarea{
+      min-height:160px;
+      resize:vertical;
+      line-height:1.5;
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (min-width:760px){
+      .row{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+    .row-3{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (min-width:980px){
+      .row-3{
+        grid-template-columns:1fr 1fr 1fr;
+      }
+    }
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+    button{
+      border:none;
+      border-radius:10px;
+      padding:10px 14px;
+      font-size:14px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+    .primary{background:var(--accent); color:#08111f;}
+    .success{background:var(--success); color:#04130a;}
+    .danger{background:var(--danger); color:white;}
+    .secondary{background:#334155; color:white;}
+    .warning{background:var(--warning); color:#111827;}
+    .message{
+      margin-top:14px;
+      min-height:24px;
+      font-weight:bold;
+    }
+    .ok{color:var(--success)}
+    .err{color:var(--danger)}
+    .info{color:var(--accent)}
+    .small{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+    .json-output{
+      min-height:340px;
+      font-family:Consolas, monospace;
+    }
+    .note{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      background:rgba(245,158,11,.10);
+      border:1px solid rgba(245,158,11,.20);
+      color:#fde68a;
+    }
+    .set-list{
+      display:grid;
+      gap:10px;
+      max-height:700px;
+      overflow:auto;
+      margin-top:10px;
+    }
+    .set-item{
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:12px;
+      padding:12px;
+    }
+    .set-header{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1fr auto auto;
+      gap:8px;
+      margin-bottom:10px;
+    }
+    @media (max-width:1200px){
+      .set-header{
+        grid-template-columns:1fr;
+      }
+    }
+    .pair-box{
+      background:rgba(255,255,255,.03);
+      border-radius:10px;
+      padding:10px;
+      margin-top:10px;
+      overflow:auto;
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+    }
+    th, td{
+      border-bottom:1px solid rgba(255,255,255,.08);
+      padding:8px;
+      vertical-align:top;
+    }
+    th{
+      text-align:left;
+      color:#cbd5e1;
+      font-size:14px;
+    }
+    .pair-input{
+      min-width:220px;
+    }
+    .pill{
+      display:inline-block;
+      background:rgba(56,189,248,.12);
+      color:#bae6fd;
+      border:1px solid rgba(56,189,248,.25);
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:12px;
+      margin-right:8px;
+      margin-bottom:8px;
+    }
+    .filter-bar{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    @media (max-width:900px){
+      .filter-bar{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <div>
+        <div class="title">Panel nauczyciela B+++ Teacher PRO</div>
+        <div class="small">Edytor tabelkowy, import CSV, filtry, eksport pojedynczych zestawów JSON.</div>
+      </div>
+      <a href="index.html">Otwórz grę studenta</a>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h2>1. Ustawienia globalne gry</h2>
+
+        <div class="row">
+          <div>
+            <label for="gameTitle">Tytuł gry</label>
+            <input id="gameTitle" type="text" value="Tłumaczenie zdań EN-PL" />
+          </div>
+          <div>
+            <label for="difficulty">Poziom trudności</label>
+            <select id="difficulty">
+              <option value="easy">Łatwy</option>
+              <option value="medium" selected>Średni</option>
+              <option value="hard">Trudny</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="schoolLevel">Domyślny poziom klas</label>
+            <select id="schoolLevel">
+              <option value="1-3">Klasy 1-3</option>
+              <option value="4-8" selected>Klasy 4-8</option>
+            </select>
+          </div>
+          <div>
+            <label for="sourceLanguageLabel">Język źródłowy</label>
+            <input id="sourceLanguageLabel" type="text" value="English" />
+          </div>
+          <div>
+            <label for="targetLanguageLabel">Język docelowy</label>
+            <input id="targetLanguageLabel" type="text" value="Polski" />
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="spawnRate">Czas pojawiania się kafelków</label>
+            <select id="spawnRate">
+              <option value="1500">Wolno</option>
+              <option value="1100" selected>Normalnie</option>
+              <option value="800">Szybko</option>
+            </select>
+          </div>
+          <div>
+            <label for="timerSeconds">Timer</label>
+            <select id="timerSeconds">
+              <option value="0">Bez timera</option>
+              <option value="30">30 sekund</option>
+              <option value="45" selected>45 sekund</option>
+              <option value="60">60 sekund</option>
+              <option value="90">90 sekund</option>
+            </select>
+          </div>
+          <div>
+            <label for="maxMistakes">Maksymalna liczba błędów</label>
+            <select id="maxMistakes">
+              <option value="0">Bez limitu</option>
+              <option value="3">3</option>
+              <option value="5" selected>5</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="randomOrder">Kolejność zdań</label>
+            <select id="randomOrder">
+              <option value="false" selected>Po kolei</option>
+              <option value="true">Losowo</option>
+            </select>
+          </div>
+          <div>
+            <label for="autoNextSeconds">Auto dalej</label>
+            <select id="autoNextSeconds">
+              <option value="0">Wyłączone</option>
+              <option value="2">2 sekundy</option>
+              <option value="3" selected>3 sekundy</option>
+              <option value="5">5 sekund</option>
+            </select>
+          </div>
+          <div>
+            <label for="distractorCount">Liczba mylących kafelków</label>
+            <select id="distractorCount">
+              <option value="2">2</option>
+              <option value="4" selected>4</option>
+              <option value="6">6</option>
+              <option value="8">8</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="punctuationMode">Interpunkcja</label>
+            <select id="punctuationMode">
+              <option value="auto" selected>Automatycznie</option>
+              <option value="tiles">Jako kafelki</option>
+            </select>
+          </div>
+          <div>
+            <label for="studentNameMode">Wymagane imię ucznia</label>
+            <select id="studentNameMode">
+              <option value="true" selected>Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+          <div>
+            <label for="showSetPicker">Wybór zestawu na starcie</label>
+            <select id="showSetPicker">
+              <option value="true" selected>Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="allowHint">Podpowiedź</label>
+            <select id="allowHint">
+              <option value="true" selected>Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+          <div>
+            <label for="allowSolution">Pokaż rozwiązanie</label>
+            <select id="allowSolution">
+              <option value="true">Tak</option>
+              <option value="false" selected>Nie</option>
+            </select>
+          </div>
+          <div>
+            <label for="showTranslationInstruction">Instrukcja tłumaczenia</label>
+            <select id="showTranslationInstruction">
+              <option value="true" selected>Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="soundEnabled">Dźwięki</label>
+            <select id="soundEnabled">
+              <option value="true" selected>Tak</option>
+              <option value="false">Nie</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>2. Nowy zestaw</h2>
+
+        <div class="row">
+          <div>
+            <label for="newSetId">ID zestawu</label>
+            <input id="newSetId" type="text" placeholder="Np. class5a" />
+          </div>
+          <div>
+            <label for="newSetName">Nazwa zestawu</label>
+            <input id="newSetName" type="text" placeholder="Np. Klasa 5A" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label for="newSetLevel">Poziom klas</label>
+            <select id="newSetLevel">
+              <option value="1-3">Klasy 1-3</option>
+              <option value="4-8" selected>Klasy 4-8</option>
+            </select>
+          </div>
+          <div>
+            <label for="newSetTheme">Temat</label>
+            <input id="newSetTheme" type="text" placeholder="Np. school / daily life / animals" />
+          </div>
+        </div>
+
+        <label for="newSetPairs" style="margin-top:12px;">Pary zdań</label>
+        <textarea id="newSetPairs" placeholder="Każda linia:
+I like apples. = Lubię jabłka.
+How are you? = Jak się masz?"></textarea>
+
+        <div class="actions">
+          <button class="primary" id="addSetBtn">Dodaj zestaw</button>
+          <button class="warning" id="loadDemoSetsBtn">Wstaw przykładowe zestawy</button>
+          <button class="secondary" id="importCsvBtn">Import CSV</button>
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display:none" />
+          <button class="danger" id="clearNewSetBtn">Wyczyść pola</button>
+        </div>
+
+        <div class="note small">
+          CSV powinno mieć kolumny:
+          <br><code>setId,setName,level,theme,source,target</code>
+        </div>
+
+        <div class="message info" id="message">Dodaj zestawy i pobierz gotowy plik JSON.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h2>3. Filtry zestawów</h2>
+      <div class="filter-bar">
+        <div>
+          <label for="filterLevel">Filtr poziomu klas</label>
+          <select id="filterLevel">
+            <option value="">Wszystkie</option>
+            <option value="1-3">Klasy 1-3</option>
+            <option value="4-8">Klasy 4-8</option>
+          </select>
+        </div>
+        <div>
+          <label for="filterTheme">Filtr tematu</label>
+          <input id="filterTheme" type="text" placeholder="Np. school" />
+        </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="secondary" id="clearFiltersBtn" style="width:100%;">Wyczyść filtry</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h2>4. Zestawy tłumaczeń</h2>
+      <div>
+        <span class="pill">Edytor tabelkowy</span>
+        <span class="pill">Import CSV</span>
+        <span class="pill">Eksport pojedynczego zestawu</span>
+      </div>
+
+      <div class="actions">
+        <button class="success" id="addEmptySetBtn">Dodaj pusty zestaw</button>
+        <button class="secondary" id="sortSetsBtn">Sortuj zestawy A-Z</button>
+        <button class="danger" id="clearSetsBtn">Usuń wszystkie zestawy</button>
+      </div>
+
+      <div id="setList" class="set-list"></div>
+      <div id="stats" class="small" style="margin-top:10px;">Liczba zestawów: 0</div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h2>5. Podgląd pliku JSON</h2>
+      <textarea id="jsonOutput" class="json-output" readonly></textarea>
+
+      <div class="actions">
+        <button class="primary" id="previewBtn">Odśwież JSON</button>
+        <button class="success" id="downloadBtn">Pobierz sentences.json</button>
+        <button class="secondary" id="copyBtn">Kopiuj JSON</button>
+        <button class="secondary" id="importBtn">Wczytaj istniejący JSON</button>
+        <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const demoSets = [
+      {
+        id: "english_polish_basic",
+        name: "English -> Polski podstawy",
+        level: "4-8",
+        theme: "school",
+        pairs: [
+          { source: "I like apples.", target: "Lubię jabłka." },
+          { source: "She is my friend.", target: "Ona jest moją przyjaciółką." },
+          { source: "We go to school every day.", target: "Chodzimy do szkoły codziennie." }
+        ]
+      },
+      {
+        id: "daily_phrases",
+        name: "Codzienne zwroty",
+        level: "1-3",
+        theme: "daily life",
+        pairs: [
+          { source: "Good morning!", target: "Dzień dobry!" },
+          { source: "See you tomorrow.", target: "Do zobaczenia jutro." },
+          { source: "How are you?", target: "Jak się masz?" }
+        ]
+      }
+    ];
+
+    const gameTitle = document.getElementById("gameTitle");
+    const difficulty = document.getElementById("difficulty");
+    const schoolLevel = document.getElementById("schoolLevel");
+    const spawnRate = document.getElementById("spawnRate");
+    const timerSeconds = document.getElementById("timerSeconds");
+    const maxMistakes = document.getElementById("maxMistakes");
+    const randomOrder = document.getElementById("randomOrder");
+    const autoNextSeconds = document.getElementById("autoNextSeconds");
+    const soundEnabled = document.getElementById("soundEnabled");
+    const studentNameMode = document.getElementById("studentNameMode");
+    const showSetPicker = document.getElementById("showSetPicker");
+    const allowHint = document.getElementById("allowHint");
+    const allowSolution = document.getElementById("allowSolution");
+    const showTranslationInstruction = document.getElementById("showTranslationInstruction");
+    const sourceLanguageLabel = document.getElementById("sourceLanguageLabel");
+    const targetLanguageLabel = document.getElementById("targetLanguageLabel");
+    const distractorCount = document.getElementById("distractorCount");
+    const punctuationMode = document.getElementById("punctuationMode");
+
+    const newSetId = document.getElementById("newSetId");
+    const newSetName = document.getElementById("newSetName");
+    const newSetLevel = document.getElementById("newSetLevel");
+    const newSetTheme = document.getElementById("newSetTheme");
+    const newSetPairs = document.getElementById("newSetPairs");
+
+    const addSetBtn = document.getElementById("addSetBtn");
+    const loadDemoSetsBtn = document.getElementById("loadDemoSetsBtn");
+    const importCsvBtn = document.getElementById("importCsvBtn");
+    const csvFileInput = document.getElementById("csvFileInput");
+    const clearNewSetBtn = document.getElementById("clearNewSetBtn");
+
+    const addEmptySetBtn = document.getElementById("addEmptySetBtn");
+    const sortSetsBtn = document.getElementById("sortSetsBtn");
+    const clearSetsBtn = document.getElementById("clearSetsBtn");
+
+    const filterLevel = document.getElementById("filterLevel");
+    const filterTheme = document.getElementById("filterTheme");
+    const clearFiltersBtn = document.getElementById("clearFiltersBtn");
+
+    const setList = document.getElementById("setList");
+    const stats = document.getElementById("stats");
+    const jsonOutput = document.getElementById("jsonOutput");
+    const previewBtn = document.getElementById("previewBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const importBtn = document.getElementById("importBtn");
+    const importFile = document.getElementById("importFile");
+    const message = document.getElementById("message");
+
+    let sets = [];
+
+    function setMessage(text, type = "info"){
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function sanitizeId(value){
+      return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "_")
+        .replace(/[^a-z0-9_-]/g, "");
+    }
+
+    function cleanText(text){
+      return String(text).trim();
+    }
+
+    function parsePairsFromTextarea(text){
+      return text.split("\n")
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          const parts = line.split("=");
+          if(parts.length < 2) return null;
+          return {
+            source: cleanText(parts[0]),
+            target: cleanText(parts.slice(1).join("="))
+          };
+        })
+        .filter(item => item && item.source && item.target);
+    }
+
+    function parseCsv(text){
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if(lines.length < 2) return [];
+
+      const rows = lines.map(line => parseCsvLine(line));
+      const header = rows[0].map(h => h.trim());
+      const body = rows.slice(1);
+
+      const getIndex = name => header.indexOf(name);
+
+      const idxSetId = getIndex("setId");
+      const idxSetName = getIndex("setName");
+      const idxLevel = getIndex("level");
+      const idxTheme = getIndex("theme");
+      const idxSource = getIndex("source");
+      const idxTarget = getIndex("target");
+
+      if([idxSetId, idxSetName, idxLevel, idxTheme, idxSource, idxTarget].some(i => i === -1)){
+        throw new Error("CSV musi mieć kolumny: setId,setName,level,theme,source,target");
+      }
+
+      const grouped = {};
+
+      body.forEach(row => {
+        const setId = sanitizeId(row[idxSetId] || "");
+        const setName = cleanText(row[idxSetName] || "");
+        const level = cleanText(row[idxLevel] || "4-8");
+        const theme = cleanText(row[idxTheme] || "");
+        const source = cleanText(row[idxSource] || "");
+        const target = cleanText(row[idxTarget] || "");
+
+        if(!setId || !setName || !source || !target) return;
+
+        if(!grouped[setId]){
+          grouped[setId] = {
+            id: setId,
+            name: setName,
+            level,
+            theme,
+            pairs: []
+          };
+        }
+
+        grouped[setId].pairs.push({ source, target });
+      });
+
+      return Object.values(grouped);
+    }
+
+    function parseCsvLine(line){
+      const result = [];
+      let current = "";
+      let insideQuotes = false;
+
+      for(let i = 0; i < line.length; i++){
+        const char = line[i];
+
+        if(char === '"'){
+          if(insideQuotes && line[i + 1] === '"'){
+            current += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if(char === "," && !insideQuotes){
+          result.push(current);
+          current = "";
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function escapeHtmlAttr(text){
+      return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function filteredSets(){
+      return sets.filter(set => {
+        const levelOk = !filterLevel.value || set.level === filterLevel.value;
+        const themeOk = !filterTheme.value.trim() ||
+          String(set.theme || "").toLowerCase().includes(filterTheme.value.trim().toLowerCase());
+        return levelOk && themeOk;
+      });
+    }
+
+    function renderSets(){
+      setList.innerHTML = "";
+
+      const visibleSets = filteredSets();
+
+      if(visibleSets.length === 0){
+        setList.innerHTML = '<div class="small">Brak zestawów pasujących do filtrów.</div>';
+      }
+
+      visibleSets.forEach(set => {
+        const realIndex = sets.findIndex(s => s.id === set.id && s.name === set.name);
+
+        const box = document.createElement("div");
+        box.className = "set-item";
+
+        const rowsHtml = (set.pairs || []).map((pair, pairIndex) => `
+          <tr>
+            <td><input class="pair-input" type="text" value="${escapeHtmlAttr(pair.source)}" data-pair-field="source" data-set-index="${realIndex}" data-pair-index="${pairIndex}"></td>
+            <td><input class="pair-input" type="text" value="${escapeHtmlAttr(pair.target)}" data-pair-field="target" data-set-index="${realIndex}" data-pair-index="${pairIndex}"></td>
+            <td><button class="danger" data-action="removePair" data-set-index="${realIndex}" data-pair-index="${pairIndex}">Usuń</button></td>
+          </tr>
+        `).join("");
+
+        box.innerHTML = `
+          <div class="set-header">
+            <input type="text" value="${escapeHtmlAttr(set.id)}" placeholder="ID zestawu" data-field="id" data-index="${realIndex}">
+            <input type="text" value="${escapeHtmlAttr(set.name)}" placeholder="Nazwa zestawu" data-field="name" data-index="${realIndex}">
+            <select data-field="level" data-index="${realIndex}">
+              <option value="1-3" ${set.level === "1-3" ? "selected" : ""}>Klasy 1-3</option>
+              <option value="4-8" ${set.level === "4-8" ? "selected" : ""}>Klasy 4-8</option>
+            </select>
+            <input type="text" value="${escapeHtmlAttr(set.theme || "")}" placeholder="Temat zestawu" data-field="theme" data-index="${realIndex}">
+            <button class="secondary" data-action="exportSet" data-index="${realIndex}">Eksport JSON</button>
+            <button class="danger" data-action="removeSet" data-index="${realIndex}">Usuń</button>
+          </div>
+
+          <div class="pair-box">
+            <table>
+              <thead>
+                <tr>
+                  <th>Zdanie źródłowe</th>
+                  <th>Tłumaczenie po polsku</th>
+                  <th>Akcja</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rowsHtml || '<tr><td colspan="3" class="small">Brak par zdań.</td></tr>'}
+              </tbody>
+            </table>
+            <div class="actions">
+              <button class="success" data-action="addPair" data-index="${realIndex}">Dodaj parę</button>
+              <button class="secondary" data-action="duplicateSet" data-index="${realIndex}">Duplikuj</button>
+              <button class="secondary" data-action="upSet" data-index="${realIndex}">Przesuń w górę</button>
+              <button class="secondary" data-action="downSet" data-index="${realIndex}">Przesuń w dół</button>
+            </div>
+          </div>
+        `;
+
+        setList.appendChild(box);
+      });
+
+      bindSetEvents();
+      stats.textContent = "Liczba zestawów: " + visibleSets.length + " / " + sets.length;
+    }
+
+    function bindSetEvents(){
+      setList.querySelectorAll("[data-field='id'], [data-field='name'], [data-field='theme'], [data-field='level']").forEach(input => {
+        input.addEventListener("input", e => {
+          const i = Number(e.target.dataset.index);
+          const field = e.target.dataset.field;
+          sets[i][field] = field === "id" ? sanitizeId(e.target.value) : e.target.value;
+          updateJsonPreview();
+        });
+      });
+
+      setList.querySelectorAll("[data-pair-field]").forEach(input => {
+        input.addEventListener("input", e => {
+          const setIndex = Number(e.target.dataset.setIndex);
+          const pairIndex = Number(e.target.dataset.pairIndex);
+          const field = e.target.dataset.pairField;
+          sets[setIndex].pairs[pairIndex][field] = e.target.value;
+          updateJsonPreview();
+        });
+      });
+
+      setList.querySelectorAll("[data-action]").forEach(btn => {
+        btn.addEventListener("click", e => {
+          const action = e.target.dataset.action;
+          const i = Number(e.target.dataset.index);
+          const setIndex = Number(e.target.dataset.setIndex);
+          const pairIndex = Number(e.target.dataset.pairIndex);
+
+          if(action === "removeSet"){
+            sets.splice(i, 1);
+          } else if(action === "duplicateSet"){
+            sets.splice(i + 1, 0, JSON.parse(JSON.stringify(sets[i])));
+            sets[i + 1].id = sets[i + 1].id + "_copy";
+            sets[i + 1].name = sets[i + 1].name + " kopia";
+          } else if(action === "upSet" && i > 0){
+            [sets[i - 1], sets[i]] = [sets[i], sets[i - 1]];
+          } else if(action === "downSet" && i < sets.length - 1){
+            [sets[i + 1], sets[i]] = [sets[i], sets[i + 1]];
+          } else if(action === "addPair"){
+            sets[i].pairs.push({ source: "", target: "" });
+          } else if(action === "removePair"){
+            sets[setIndex].pairs.splice(pairIndex, 1);
+          } else if(action === "exportSet"){
+            exportSingleSet(sets[i]);
+          }
+
+          renderSets();
+          updateJsonPreview();
+        });
+      });
+    }
+
+    function getConfigData(){
+      const preparedSets = sets
+        .map(set => ({
+          id: sanitizeId(set.id),
+          name: cleanText(set.name),
+          level: cleanText(set.level || "4-8"),
+          theme: cleanText(set.theme || ""),
+          pairs: (set.pairs || [])
+            .map(pair => ({
+              source: cleanText(pair.source),
+              target: cleanText(pair.target)
+            }))
+            .filter(pair => pair.source && pair.target)
+        }))
+        .filter(set => set.id && set.name && set.pairs.length > 0);
+
+      if(preparedSets.length === 0){
+        setMessage("Dodaj przynajmniej jeden poprawny zestaw.", "err");
+        return null;
+      }
+
+      return {
+        title: cleanText(gameTitle.value) || "Tłumaczenie zdań",
+        settings: {
+          difficulty: difficulty.value,
+          schoolLevel: schoolLevel.value,
+          spawnRate: Number(spawnRate.value),
+          timerSeconds: Number(timerSeconds.value),
+          maxMistakes: Number(maxMistakes.value),
+          randomOrder: randomOrder.value === "true",
+          autoNextSeconds: Number(autoNextSeconds.value),
+          soundEnabled: soundEnabled.value === "true",
+          studentNameMode: studentNameMode.value === "true",
+          showSetPicker: showSetPicker.value === "true",
+          allowHint: allowHint.value === "true",
+          allowSolution: allowSolution.value === "true",
+          showTranslationInstruction: showTranslationInstruction.value === "true",
+          sourceLanguageLabel: cleanText(sourceLanguageLabel.value) || "English",
+          targetLanguageLabel: cleanText(targetLanguageLabel.value) || "Polski",
+          distractorCount: Number(distractorCount.value),
+          punctuationMode: punctuationMode.value
+        },
+        sets: preparedSets
+      };
+    }
+
+    function updateJsonPreview(){
+      const data = getConfigData();
+      if(!data){
+        jsonOutput.value = "";
+        return;
+      }
+      jsonOutput.value = JSON.stringify(data, null, 2);
+    }
+
+    function addSet(id, name, level, theme, pairs){
+      sets.push({
+        id: sanitizeId(id),
+        name: cleanText(name),
+        level: cleanText(level || "4-8"),
+        theme: cleanText(theme || ""),
+        pairs: (pairs || []).map(pair => ({
+          source: cleanText(pair.source),
+          target: cleanText(pair.target)
+        })).filter(pair => pair.source && pair.target)
+      });
+      renderSets();
+      updateJsonPreview();
+    }
+
+    function applyData(data){
+      gameTitle.value = data.title || "Tłumaczenie zdań";
+
+      const s = data.settings || {};
+      difficulty.value = s.difficulty || "medium";
+      schoolLevel.value = s.schoolLevel || "4-8";
+      spawnRate.value = String(s.spawnRate ?? 1100);
+      timerSeconds.value = String(s.timerSeconds ?? 45);
+      maxMistakes.value = String(s.maxMistakes ?? 5);
+      randomOrder.value = String(!!s.randomOrder);
+      autoNextSeconds.value = String(s.autoNextSeconds ?? 3);
+      soundEnabled.value = String(s.soundEnabled ?? true);
+      studentNameMode.value = String(s.studentNameMode ?? true);
+      showSetPicker.value = String(s.showSetPicker ?? true);
+      allowHint.value = String(s.allowHint ?? true);
+      allowSolution.value = String(s.allowSolution ?? false);
+      showTranslationInstruction.value = String(s.showTranslationInstruction ?? true);
+      sourceLanguageLabel.value = s.sourceLanguageLabel || "English";
+      targetLanguageLabel.value = s.targetLanguageLabel || "Polski";
+      distractorCount.value = String(s.distractorCount ?? 4);
+      punctuationMode.value = s.punctuationMode || "auto";
+
+      sets = Array.isArray(data.sets) ? data.sets.map(set => ({
+        id: sanitizeId(set.id || ""),
+        name: cleanText(set.name || ""),
+        level: cleanText(set.level || "4-8"),
+        theme: cleanText(set.theme || ""),
+        pairs: Array.isArray(set.pairs)
+          ? set.pairs.map(pair => ({
+              source: cleanText(pair.source || ""),
+              target: cleanText(pair.target || "")
+            }))
+          : []
+      })) : [];
+
+      renderSets();
+      updateJsonPreview();
+    }
+
+    function downloadJsonFile(filename, content){
+      const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportSingleSet(set){
+      const full = getConfigData();
+      if(!full) return;
+
+      const single = {
+        title: full.title + " - " + set.name,
+        settings: full.settings,
+        sets: [{
+          id: sanitizeId(set.id),
+          name: cleanText(set.name),
+          level: cleanText(set.level || "4-8"),
+          theme: cleanText(set.theme || ""),
+          pairs: (set.pairs || []).map(pair => ({
+            source: cleanText(pair.source),
+            target: cleanText(pair.target)
+          })).filter(pair => pair.source && pair.target)
+        }]
+      };
+
+      downloadJsonFile(`${sanitizeId(set.id) || "zestaw"}.json`, JSON.stringify(single, null, 2));
+      setMessage("Wyeksportowano pojedynczy zestaw JSON.", "ok");
+    }
+
+    async function copyJson(){
+      if(!jsonOutput.value.trim()) updateJsonPreview();
+      if(!jsonOutput.value.trim()) return;
+
+      try{
+        await navigator.clipboard.writeText(jsonOutput.value);
+        setMessage("JSON skopiowany do schowka.", "ok");
+      }catch{
+        jsonOutput.select();
+        document.execCommand("copy");
+        setMessage("JSON skopiowany do schowka.", "ok");
+      }
+    }
+
+    addSetBtn.addEventListener("click", () => {
+      const id = newSetId.value;
+      const name = newSetName.value;
+      const level = newSetLevel.value;
+      const theme = newSetTheme.value;
+      const pairs = parsePairsFromTextarea(newSetPairs.value);
+
+      if(!sanitizeId(id) || !cleanText(name)){
+        setMessage("Podaj ID i nazwę zestawu.", "err");
+        return;
+      }
+
+      if(pairs.length === 0){
+        setMessage("Dodaj przynajmniej jedną poprawną parę zdań.", "err");
+        return;
+      }
+
+      addSet(id, name, level, theme, pairs);
+      setMessage("Dodano zestaw.", "ok");
+    });
+
+    loadDemoSetsBtn.addEventListener("click", () => {
+      sets = JSON.parse(JSON.stringify(demoSets));
+      renderSets();
+      updateJsonPreview();
+      setMessage("Wstawiono przykładowe zestawy.", "ok");
+    });
+
+    importCsvBtn.addEventListener("click", () => csvFileInput.click());
+
+    csvFileInput.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if(!file) return;
+
+      try{
+        const text = await file.text();
+        const importedSets = parseCsv(text);
+        if(importedSets.length === 0){
+          throw new Error("CSV nie zawiera poprawnych danych.");
+        }
+
+        importedSets.forEach(set => sets.push(set));
+        renderSets();
+        updateJsonPreview();
+        setMessage("Zaimportowano dane z CSV.", "ok");
+      }catch(error){
+        console.error(error);
+        setMessage(error.message || "Nie udało się zaimportować CSV.", "err");
+      }finally{
+        csvFileInput.value = "";
+      }
+    });
+
+    clearNewSetBtn.addEventListener("click", () => {
+      newSetId.value = "";
+      newSetName.value = "";
+      newSetLevel.value = "4-8";
+      newSetTheme.value = "";
+      newSetPairs.value = "";
+      setMessage("Wyczyszczono pola nowego zestawu.", "info");
+    });
+
+    addEmptySetBtn.addEventListener("click", () => {
+      addSet("nowy_zestaw", "Nowy zestaw", "4-8", "", []);
+    });
+
+    sortSetsBtn.addEventListener("click", () => {
+      sets.sort((a, b) => String(a.name).localeCompare(String(b.name), "pl"));
+      renderSets();
+      updateJsonPreview();
+      setMessage("Posortowano zestawy A-Z.", "ok");
+    });
+
+    clearSetsBtn.addEventListener("click", () => {
+      sets = [];
+      renderSets();
+      updateJsonPreview();
+      setMessage("Usunięto wszystkie zestawy.", "info");
+    });
+
+    filterLevel.addEventListener("input", renderSets);
+    filterTheme.addEventListener("input", renderSets);
+
+    clearFiltersBtn.addEventListener("click", () => {
+      filterLevel.value = "";
+      filterTheme.value = "";
+      renderSets();
+    });
+
+    previewBtn.addEventListener("click", () => {
+      updateJsonPreview();
+      if(jsonOutput.value.trim()){
+        setMessage("Odświeżono podgląd JSON.", "ok");
+      }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      updateJsonPreview();
+      if(!jsonOutput.value.trim()) return;
+      downloadJsonFile("sentences.json", jsonOutput.value);
+      setMessage("Pobrano plik sentences.json.", "ok");
+    });
+
+    copyBtn.addEventListener("click", copyJson);
+
+    importBtn.addEventListener("click", () => importFile.click());
+
+    importFile.addEventListener("change", async (event) => {
+      const file = event.target.files[0];
+      if(!file) return;
+
+      try{
+        const text = await file.text();
+        const data = JSON.parse(text);
+
+        if(!data || !Array.isArray(data.sets)){
+          throw new Error("Niepoprawny plik JSON.");
+        }
+
+        applyData(data);
+        setMessage("Wczytano plik JSON.", "ok");
+      }catch(error){
+        console.error(error);
+        setMessage("Nie udało się wczytać pliku JSON.", "err");
+      }finally{
+        importFile.value = "";
+      }
+    });
+
+    (function init(){
+      applyData({
+        title: "Tłumaczenie zdań EN-PL",
+        settings: {
+          difficulty: "medium",
+          schoolLevel: "4-8",
+          spawnRate: 1100,
+          timerSeconds: 45,
+          maxMistakes: 5,
+          randomOrder: false,
+          autoNextSeconds: 3,
+          soundEnabled: true,
+          studentNameMode: true,
+          showSetPicker: true,
+          allowHint: true,
+          allowSolution: false,
+          showTranslationInstruction: true,
+          sourceLanguageLabel: "English",
+          targetLanguageLabel: "Polski",
+          distractorCount: 4,
+          punctuationMode: "auto"
+        },
+        sets: demoSets
+      });
+    })();
+  </script>
+</body>
+</html>
