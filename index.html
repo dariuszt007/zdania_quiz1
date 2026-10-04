@@ -344,7 +344,7 @@
     }
 
     .start-box{
-      width:min(760px, 100%);
+      width:min(720px, 100%);
       background:#111827;
       border:1px solid rgba(255,255,255,.1);
       border-radius:18px;
@@ -414,7 +414,7 @@
   <div class="start-screen" id="startScreen" style="display:none;">
     <div class="start-box">
       <h2>Start gry</h2>
-      <div class="small">Najpierw wybierz klasę / grupę, potem zestaw zdań.</div>
+      <div class="small">Wpisz imię ucznia, wybierz klasę / grupę, a potem zestaw.</div>
 
       <div style="margin-top:12px;">
         <label for="studentNameInput">Imię ucznia</label>
@@ -451,7 +451,7 @@
       <div class="card">
         <h2>Instrukcja</h2>
         <div class="small" id="instructionText">
-          Przeczytaj zdanie źródłowe i wybierz polskie wyrazy w odpowiedniej kolejności.
+          Przeczytaj zdanie źródłowe i wybierz wyrazy w odpowiedniej kolejności.
         </div>
       </div>
 
@@ -490,7 +490,7 @@
         <div class="small" id="sourceLabel">Zdanie źródłowe</div>
         <div class="source-box" id="sourceSentenceBox">...</div>
 
-        <div class="small" style="margin-top:14px;" id="targetLabel">Tłumaczenie po polsku</div>
+        <div class="small" style="margin-top:14px;" id="targetLabel">Tłumaczenie</div>
         <div class="progress" id="progressDisplay"></div>
 
         <div class="summary-box small" id="sentenceSummary">
@@ -652,8 +652,8 @@
     const startScreen = document.getElementById("startScreen");
     const studentNameInput = document.getElementById("studentNameInput");
     const classSelect = document.getElementById("classSelect");
-    const datasetSelect = document.getElementById("datasetSelect");
     const startGameBtn = document.getElementById("startGameBtn");
+    const datasetSelect = document.getElementById("datasetSelect");
 
     let config = null;
     let allSets = [];
@@ -744,21 +744,26 @@
 
     function getUniqueClassLabels(){
       const labels = allSets
-        .map(set => String(set.classLabel || "").trim())
+        .map(set => set.classLabel || "")
         .filter(Boolean);
 
-      const unique = [...new Set(labels)].sort((a, b) => a.localeCompare(b, "pl"));
-
-      if(unique.length === 0){
-        return ["Bez klasy"];
-      }
-
+      const unique = [...new Set(labels)];
+      unique.sort((a, b) => a.localeCompare(b, "pl"));
       return unique;
     }
 
     function fillClassSelect(){
-      const classLabels = getUniqueClassLabels();
       classSelect.innerHTML = "";
+
+      const classLabels = getUniqueClassLabels();
+
+      if(classLabels.length === 0){
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Brak klasy";
+        classSelect.appendChild(option);
+        return;
+      }
 
       classLabels.forEach(label => {
         const option = document.createElement("option");
@@ -767,34 +772,28 @@
         classSelect.appendChild(option);
       });
 
-      const preferred = config.settings.defaultClassLabel;
-      if(preferred && classLabels.includes(preferred)){
-        classSelect.value = preferred;
+      if(config.settings.defaultClassLabel && classLabels.includes(config.settings.defaultClassLabel)){
+        classSelect.value = config.settings.defaultClassLabel;
       } else {
         classSelect.selectedIndex = 0;
       }
     }
 
-    function fillDatasetSelectForSelectedClass(){
+    function fillDatasetSelectByClass(){
       datasetSelect.innerHTML = "";
+
       const selectedClass = classSelect.value;
+      const matchingSets = allSets.filter(set => (set.classLabel || "") === selectedClass);
 
-      const setsForClass = allSets.filter(set => {
-        const label = String(set.classLabel || "").trim() || "Bez klasy";
-        return label === selectedClass;
-      });
-
-      const finalSets = setsForClass.length > 0 ? setsForClass : allSets;
+      const finalSets = matchingSets.length > 0 ? matchingSets : allSets;
 
       finalSets.forEach((set, index) => {
         const option = document.createElement("option");
         option.value = set.id;
-        option.textContent = set.name + (set.theme ? " - " + set.theme : "");
+        option.textContent = `${set.name}${set.theme ? " - " + set.theme : ""}`;
         if(index === 0) option.selected = true;
         datasetSelect.appendChild(option);
       });
-
-      datasetSelect.parentElement.style.display = config.settings.showSetPicker ? "block" : "block";
     }
 
     function setMessage(text, type = "info"){
@@ -848,7 +847,7 @@
       sourceLabel.textContent = "Zdanie źródłowe (" + config.settings.sourceLanguageLabel + ")";
       targetLabel.textContent = "Tłumaczenie (" + config.settings.targetLanguageLabel + ")";
       instructionText.textContent = config.settings.showTranslationInstruction
-        ? "Przeczytaj zdanie źródłowe i wybierz polskie wyrazy w odpowiedniej kolejności."
+        ? "Przeczytaj zdanie źródłowe i wybierz wyrazy języka docelowego w odpowiedniej kolejności."
         : "Wybierz poprawne kafelki.";
     }
 
@@ -946,11 +945,20 @@
     function buildSmartDistractorPool(){
       const localPool = [];
       const globalPool = [];
+      const currentTargetWords = new Set(
+        currentWords
+          .filter(token => !isPunctuation(token))
+          .map(token => String(token).trim())
+          .filter(Boolean)
+      );
 
       if(activeSet){
         activeSet.pairs.forEach(pair => {
           tokenizeTarget(pair.target).forEach(token => {
-            if(!isPunctuation(token)) localPool.push(token);
+            const clean = String(token).trim();
+            if(clean && !isPunctuation(clean) && !currentTargetWords.has(clean)){
+              localPool.push(clean);
+            }
           });
         });
       }
@@ -958,7 +966,10 @@
       allSets.forEach(set => {
         set.pairs.forEach(pair => {
           tokenizeTarget(pair.target).forEach(token => {
-            if(!isPunctuation(token)) globalPool.push(token);
+            const clean = String(token).trim();
+            if(clean && !isPunctuation(clean) && !currentTargetWords.has(clean)){
+              globalPool.push(clean);
+            }
           });
         });
       });
@@ -971,19 +982,16 @@
 
     function getDistractorWord(){
       const pools = buildSmartDistractorPool();
-      const excluded = new Set(currentWords.filter(token => !isPunctuation(token)));
 
-      const localCandidates = pools.local.filter(word => !excluded.has(word));
-      if(localCandidates.length > 0){
-        return localCandidates[Math.floor(Math.random() * localCandidates.length)];
+      if(pools.local.length > 0){
+        return pools.local[Math.floor(Math.random() * pools.local.length)];
       }
 
-      const globalCandidates = pools.global.filter(word => !excluded.has(word));
-      if(globalCandidates.length > 0){
-        return globalCandidates[Math.floor(Math.random() * globalCandidates.length)];
+      if(pools.global.length > 0){
+        return pools.global[Math.floor(Math.random() * pools.global.length)];
       }
 
-      return "test";
+      return currentWords.find(token => !isPunctuation(token)) || "test";
     }
 
     function getExpectedTokenSkippingAutoPunctuation(){
@@ -1258,7 +1266,7 @@
 
       renderProgress();
       updateTopInfo();
-      setMessage("Przetłumacz zdanie, wybierając polskie kafelki po kolei.", "info");
+      setMessage("Ułóż tłumaczenie w języku docelowym, wybierając poprawne kafelki po kolei.", "info");
       startLoops();
     }
 
@@ -1558,11 +1566,6 @@ ${wrongText}`;
         return;
       }
 
-      if(!datasetSelect.value){
-        alert("Wybierz klasę i zestaw.");
-        return;
-      }
-
       studentName = studentNameInput.value.trim();
       chooseActiveSet();
       startScreen.style.display = "none";
@@ -1593,7 +1596,7 @@ ${wrongText}`;
     exportCsvBtn.addEventListener("click", exportReportCsv);
     printReportBtn.addEventListener("click", printReport);
 
-    classSelect.addEventListener("change", fillDatasetSelectForSelectedClass);
+    classSelect.addEventListener("change", fillDatasetSelectByClass);
     startGameBtn.addEventListener("click", startGame);
 
     document.addEventListener("fullscreenchange", updateFullscreenButton);
@@ -1621,7 +1624,7 @@ ${wrongText}`;
 
       allSets = data.sets.slice();
       fillClassSelect();
-      fillDatasetSelectForSelectedClass();
+      fillDatasetSelectByClass();
       updateScore();
       updateTopInfo();
 
