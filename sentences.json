@@ -1,7 +1,7 @@
 {
-  "title": "Tłumaczenie zdań EN-PL",
+  "title": "Make sentences!",
   "settings": {
-    "difficulty": "medium",
+    "difficulty": "easy",
     "defaultClassLabel": "Grade 1",
     "spawnRate": 1500,
     "timerSeconds": 0,
@@ -23,7 +23,7 @@
     {
       "id": "daily_phrases",
       "name": "WhoWhatWhereHow",
-      "classLabel": "grupa początkująca",
+      "classLabel": "Grade 1",
       "theme": "daily life",
       "pairs": [
         {
