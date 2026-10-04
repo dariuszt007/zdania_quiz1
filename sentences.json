@@ -27,16 +27,16 @@
       "theme": "school",
       "pairs": [
         {
-          "source": "I like apples.",
-          "target": "Lubię jabłka."
+          "source": "Lubię jabłka.",
+          "target": "I like apples."
         },
         {
-          "source": "She is my friend.",
-          "target": "Ona jest moją przyjaciółką."
+          "source": "Ona jest moją przyjaciółką.",
+          "target": "She is my friend."
         },
         {
-          "source": "We go to school every day.",
-          "target": "Chodzimy do szkoły codziennie."
+          "source": "Chodzimy do szkoły codziennie.",
+          "target": "We go to school every day."
         }
       ]
     },
@@ -59,16 +59,16 @@
       "theme": "daily life",
       "pairs": [
         {
-          "source": "Good morning!",
-          "target": "Dzień dobry!"
+          "source": "Dzień dobry!",
+          "target": "Good morning!"
         },
         {
-          "source": "See you tomorrow.",
-          "target": "Do zobaczenia jutro."
+          "source": "Do zobaczenia jutro.",
+          "target": "See you tomorrow."
         },
         {
-          "source": "How are you?",
-          "target": "Jak się masz?"
+          "source": "Jak się masz?",
+          "target": "How are you?"
         }
       ]
     },
@@ -79,16 +79,16 @@
       "theme": "daily life",
       "pairs": [
         {
-          "source": "Good morning!",
-          "target": "Dzień dobry!"
+          "source": "Dzień dobry!",
+          "target": "Good morning!"
         },
         {
-          "source": "See you tomorrow.",
-          "target": "Do zobaczenia jutro."
+          "source": "Do zobaczenia jutro.",
+          "target": "See you tomorrow."
         },
         {
-          "source": "How are you?",
-          "target": "Jak się masz?"
+          "source": "Jak się masz?",
+          "target": "How are you?"
         }
       ]
     }
