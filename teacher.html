@@ -167,7 +167,7 @@
     }
     .set-header{
       display:grid;
-      grid-template-columns:1fr 1fr 1fr 1fr auto auto;
+      grid-template-columns:1fr 1fr 1fr 1fr auto;
       gap:8px;
       margin-bottom:10px;
     }
@@ -457,7 +457,6 @@ How are you? = Jak się masz?"></textarea>
         <span class="pill">Własna klasa</span>
         <span class="pill">Edytor tabelkowy</span>
         <span class="pill">CSV</span>
-        <span class="pill">Eksport pojedynczego zestawu</span>
       </div>
 
       <div class="actions">
@@ -716,7 +715,6 @@ How are you? = Jak się masz?"></textarea>
             <input type="text" value="${escapeHtmlAttr(set.name)}" placeholder="Nazwa zestawu" data-field="name" data-index="${realIndex}">
             <input type="text" value="${escapeHtmlAttr(set.classLabel || "")}" placeholder="Klasa / grupa" data-field="classLabel" data-index="${realIndex}">
             <input type="text" value="${escapeHtmlAttr(set.theme || "")}" placeholder="Temat zestawu" data-field="theme" data-index="${realIndex}">
-            <button class="secondary" data-action="exportSet" data-index="${realIndex}">Eksport JSON</button>
             <button class="danger" data-action="removeSet" data-index="${realIndex}">Usuń</button>
           </div>
 
@@ -790,8 +788,6 @@ How are you? = Jak się masz?"></textarea>
             sets[i].pairs.push({ source: "", target: "" });
           } else if(action === "removePair"){
             sets[setIndex].pairs.splice(pairIndex, 1);
-          } else if(action === "exportSet"){
-            exportSingleSet(sets[i]);
           }
 
           renderSets();
@@ -919,29 +915,6 @@ How are you? = Jak się masz?"></textarea>
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
-    }
-
-    function exportSingleSet(set){
-      const full = getConfigData();
-      if(!full) return;
-
-      const single = {
-        title: full.title + " - " + set.name,
-        settings: full.settings,
-        sets: [{
-          id: sanitizeId(set.id),
-          name: cleanText(set.name),
-          classLabel: cleanText(set.classLabel || ""),
-          theme: cleanText(set.theme || ""),
-          pairs: (set.pairs || []).map(pair => ({
-            source: cleanText(pair.source),
-            target: cleanText(pair.target)
-          })).filter(pair => pair.source && pair.target)
-        }]
-      };
-
-      downloadJsonFile(`${sanitizeId(set.id) || "zestaw"}.json`, JSON.stringify(single, null, 2));
-      setMessage("Wyeksportowano pojedynczy zestaw JSON.", "ok");
     }
 
     async function copyJson(){
