@@ -2,10 +2,10 @@
   "title": "Tłumaczenie zdań EN-PL",
   "settings": {
     "difficulty": "medium",
-    "defaultClassLabel": "Klasa 5",
+    "defaultClassLabel": "Grade 1",
     "spawnRate": 1500,
     "timerSeconds": 0,
-    "maxMistakes": 5,
+    "maxMistakes": 0,
     "randomOrder": true,
     "autoNextSeconds": 3,
     "soundEnabled": true,
@@ -14,81 +14,65 @@
     "allowHint": true,
     "allowSolution": true,
     "showTranslationInstruction": true,
-    "sourceLanguageLabel": "Polski",
+    "sourceLanguageLabel": "Japoński",
     "targetLanguageLabel": "English",
     "distractorCount": 2,
     "punctuationMode": "auto"
   },
   "sets": [
     {
-      "id": "english_polish_basic",
-      "name": "English -> Polski podstawy",
-      "classLabel": "Klasa 5",
-      "theme": "school",
-      "pairs": [
-        {
-          "source": "Lubię jabłka.",
-          "target": "I like apples."
-        },
-        {
-          "source": "Ona jest moją przyjaciółką.",
-          "target": "She is my friend."
-        },
-        {
-          "source": "Chodzimy do szkoły codziennie.",
-          "target": "We go to school every day."
-        }
-      ]
-    },
-    {
-      "id": "english_polish_basic_copy",
-      "name": "Polski  -> English",
-      "classLabel": "Klasa 5",
-      "theme": "school",
-      "pairs": [
-        {
-          "source": "Lubię jabłka.",
-          "target": "I like apples."
-        }
-      ]
-    },
-    {
       "id": "daily_phrases",
-      "name": "Codzienne zwroty",
+      "name": "WhoWhatWhereHow",
       "classLabel": "grupa początkująca",
       "theme": "daily life",
       "pairs": [
         {
-          "source": "Dzień dobry!",
-          "target": "Good morning!"
+          "source": "あの男の子は誰ですか？",
+          "target": "Who is that boy?"
         },
         {
-          "source": "Do zobaczenia jutro.",
-          "target": "See you tomorrow."
+          "source": "あなたの英語の先生は誰ですか？",
+          "target": "Who is your English teacher?"
         },
         {
-          "source": "Jak się masz?",
-          "target": "How are you?"
-        }
-      ]
-    },
-    {
-      "id": "daily_phrases_copy",
-      "name": "Gotowanie",
-      "classLabel": "grupa początkująca",
-      "theme": "daily life",
-      "pairs": [
-        {
-          "source": "Dzień dobry!",
-          "target": "Good morning!"
+          "source": "あなたの大好きなサッカー選手は誰ですか？）",
+          "target": "Who is your favorite soccer player?"
         },
         {
-          "source": "Do zobaczenia jutro.",
-          "target": "See you tomorrow."
+          "source": "これは何ですか？",
+          "target": "What is this?"
         },
         {
-          "source": "Jak się masz?",
-          "target": "How are you?"
+          "source": "お昼ご飯に何が食べたいですか？",
+          "target": "What do you want for lunch?"
+        },
+        {
+          "source": "普段は何時に寝ますか？",
+          "target": "What time do you usually go to bed?"
+        },
+        {
+          "source": "トイレはどこですか？",
+          "target": "Where is the restroom?"
+        },
+        {
+          "source": "あなたはどこに住んでいますか？",
+          "target": "Where do you live?"
+        },
+        {
+          "source": "私の鍵はどこにありますか？",
+          "target": "Where are my keys?"
+        },
+        {
+          "source": "今日の調子はどうですか？",
+          "target": "How are you today?"
+        },
+        {
+          "source": "どうやって学校に来ていますか？",
+          "target": "How do you come to school?"
+        },
+        {
+          "source": "あなたのお姉さん（妹さん）は何歳ですか？",
+          "target": "How old is your sister?"
         }
       ]
     }
