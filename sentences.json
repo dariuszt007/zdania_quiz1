@@ -1,0 +1,64 @@
+{
+  "title": "Tłumaczenie zdań EN-PL",
+  "settings": {
+    "difficulty": "medium",
+    "schoolLevel": "4-8",
+    "spawnRate": 1100,
+    "timerSeconds": 45,
+    "maxMistakes": 5,
+    "randomOrder": false,
+    "autoNextSeconds": 3,
+    "soundEnabled": true,
+    "studentNameMode": true,
+    "showSetPicker": true,
+    "allowHint": true,
+    "allowSolution": false,
+    "showTranslationInstruction": true,
+    "sourceLanguageLabel": "English",
+    "targetLanguageLabel": "Polski",
+    "distractorCount": 4,
+    "punctuationMode": "auto"
+  },
+  "sets": [
+    {
+      "id": "english_polish_basic",
+      "name": "English -> Polski podstawy",
+      "level": "4-8",
+      "theme": "school",
+      "pairs": [
+        {
+          "source": "I like apples.",
+          "target": "Lubię jabłka."
+        },
+        {
+          "source": "She is my friend.",
+          "target": "Ona jest moją przyjaciółką."
+        },
+        {
+          "source": "We go to school every day.",
+          "target": "Chodzimy do szkoły codziennie."
+        }
+      ]
+    },
+    {
+      "id": "daily_phrases",
+      "name": "Codzienne zwroty",
+      "level": "1-3",
+      "theme": "daily life",
+      "pairs": [
+        {
+          "source": "Good morning!",
+          "target": "Dzień dobry!"
+        },
+        {
+          "source": "See you tomorrow.",
+          "target": "Do zobaczenia jutro."
+        },
+        {
+          "source": "How are you?",
+          "target": "Jak się masz?"
+        }
+      ]
+    }
+  ]
+}
