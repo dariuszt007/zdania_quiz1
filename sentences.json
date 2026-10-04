@@ -42,13 +42,13 @@
     },
     {
       "id": "english_polish_basic_copy",
-      "name": "English -> Polski sredni",
+      "name": "Polski -> English",
       "classLabel": "Klasa 5",
       "theme": "school",
       "pairs": [
         {
-          "source": "I like apples.",
-          "target": "Lubię jabłka."
+          "source": "jabłko",
+          "target": "a p p l e s"
         },
         {
           "source": "She is my friend.",
