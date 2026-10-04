@@ -2,7 +2,7 @@
   "title": "Tłumaczenie zdań EN-PL",
   "settings": {
     "difficulty": "medium",
-    "defaultClassLabel": "5A",
+    "schoolLevel": "4-8",
     "spawnRate": 1100,
     "timerSeconds": 45,
     "maxMistakes": 5,
@@ -23,7 +23,7 @@
     {
       "id": "english_polish_basic",
       "name": "English -> Polski podstawy",
-      "classLabel": "5A",
+      "level": "4-8",
       "theme": "school",
       "pairs": [
         {
@@ -43,7 +43,7 @@
     {
       "id": "daily_phrases",
       "name": "Codzienne zwroty",
-      "classLabel": "grupa początkująca",
+      "level": "1-3",
       "theme": "daily life",
       "pairs": [
         {
