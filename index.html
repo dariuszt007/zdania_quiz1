@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gra dla studentów - wersja B+++ Teacher PRO</title>
+  <title>Gra dla studentów - wersja B+++ Teacher PRO custom class</title>
   <style>
     :root{
       --bg:#0f172a;
@@ -564,7 +564,7 @@
       title: "Tłumaczenie zdań EN-PL",
       settings: {
         difficulty: "medium",
-        schoolLevel: "4-8",
+        defaultClassLabel: "5A",
         spawnRate: 1100,
         timerSeconds: 45,
         maxMistakes: 5,
@@ -585,7 +585,7 @@
         {
           id: "default",
           name: "Domyślny zestaw",
-          level: "4-8",
+          classLabel: "5A",
           theme: "general",
           pairs: [
             { source: "I like apples.", target: "Lubię jabłka." },
@@ -595,7 +595,7 @@
       ]
     };
 
-    const REPORTS_KEY = "translation_words_reports_b_teacher_pro";
+    const REPORTS_KEY = "translation_words_reports_b_teacher_pro_custom_class";
     const COLOR_CLASSES = ["token-c1", "token-c2", "token-c3", "token-c4"];
     const PUNCTUATION = [".", ",", "!", "?", ";", ":"];
 
@@ -691,7 +691,7 @@
           .map(set => ({
             id: String(set.id || "").trim(),
             name: String(set.name || "").trim(),
-            level: String(set.level || "").trim(),
+            classLabel: String(set.classLabel || "").trim(),
             theme: String(set.theme || "").trim(),
             pairs: Array.isArray(set.pairs)
               ? set.pairs.map(pair => ({
@@ -710,7 +710,7 @@
           title: typeof data.title === "string" && data.title.trim() ? data.title.trim() : fallbackData.title,
           settings: {
             difficulty: data.settings?.difficulty || fallbackData.settings.difficulty,
-            schoolLevel: data.settings?.schoolLevel || fallbackData.settings.schoolLevel,
+            defaultClassLabel: data.settings?.defaultClassLabel || fallbackData.settings.defaultClassLabel,
             spawnRate: Number(data.settings?.spawnRate ?? fallbackData.settings.spawnRate),
             timerSeconds: Number(data.settings?.timerSeconds ?? fallbackData.settings.timerSeconds),
             maxMistakes: Number(data.settings?.maxMistakes ?? fallbackData.settings.maxMistakes),
@@ -740,8 +740,8 @@
       datasetSelect.innerHTML = "";
 
       const filteredSets = allSets.filter(set => {
-        if(!config.settings.schoolLevel) return true;
-        return !set.level || set.level === config.settings.schoolLevel;
+        if(!config.settings.defaultClassLabel) return true;
+        return !set.classLabel || set.classLabel === config.settings.defaultClassLabel;
       });
 
       const finalSets = filteredSets.length > 0 ? filteredSets : allSets;
@@ -749,7 +749,7 @@
       finalSets.forEach((set, index) => {
         const option = document.createElement("option");
         option.value = set.id;
-        option.textContent = `${set.name}${set.level ? " (" + set.level + ")" : ""}`;
+        option.textContent = `${set.name}${set.classLabel ? " (" + set.classLabel + ")" : ""}`;
         if(index === 0) option.selected = true;
         datasetSelect.appendChild(option);
       });
@@ -791,7 +791,8 @@
       gameSubtitle.textContent =
         (loadedFromFile ? "Załadowano dane z sentences.json" : "Użyto danych awaryjnych") +
         (studentName ? " | Uczeń: " + studentName : "") +
-        " | Zestaw: " + setName;
+        " | Zestaw: " + setName +
+        (activeSet?.classLabel ? " | Klasa: " + activeSet.classLabel : "");
 
       difficultyLine.textContent = "Poziom: " + translateDifficulty(config.settings.difficulty);
       mistakesLine.textContent = "Błędy: " + sentenceMistakes + " / " + (
@@ -932,14 +933,14 @@
       const pools = buildSmartDistractorPool();
       const excluded = new Set(currentWords.filter(token => !isPunctuation(token)));
 
-      const themeRelated = pools.local.filter(word => !excluded.has(word));
-      if(themeRelated.length > 0){
-        return themeRelated[Math.floor(Math.random() * themeRelated.length)];
+      const localCandidates = pools.local.filter(word => !excluded.has(word));
+      if(localCandidates.length > 0){
+        return localCandidates[Math.floor(Math.random() * localCandidates.length)];
       }
 
-      const allOther = pools.global.filter(word => !excluded.has(word));
-      if(allOther.length > 0){
-        return allOther[Math.floor(Math.random() * allOther.length)];
+      const globalCandidates = pools.global.filter(word => !excluded.has(word));
+      if(globalCandidates.length > 0){
+        return globalCandidates[Math.floor(Math.random() * globalCandidates.length)];
       }
 
       return "test";
@@ -1273,6 +1274,7 @@
         date: new Date().toLocaleString("pl-PL"),
         title: config.title,
         setName: activeSet ? activeSet.name : "brak",
+        classLabel: activeSet ? activeSet.classLabel : "",
         studentName: studentName || "brak",
         correctCount,
         wrongCount,
@@ -1337,7 +1339,7 @@
         const div = document.createElement("div");
         div.className = "history-item";
         div.textContent =
-          `${item.date} | ${item.studentName} | ${item.setName} | ${item.correctCount} poprawnych | ${item.wrongCount} błędów | ${item.finishedCount}/${item.totalSentences} zdań | ${item.accuracy}%`;
+          `${item.date} | ${item.studentName} | ${item.setName} | ${item.classLabel || "-"} | ${item.correctCount} poprawnych | ${item.wrongCount} błędów | ${item.finishedCount}/${item.totalSentences} zdań | ${item.accuracy}%`;
         historyList.appendChild(div);
       });
     }
@@ -1357,6 +1359,7 @@
       reportDetails.textContent =
         "Uczeń: " + report.studentName +
         " | Zestaw: " + report.setName +
+        (report.classLabel ? " | Klasa: " + report.classLabel : "") +
         " | Poziom: " + report.difficulty +
         " | Timer: " + (report.timerSeconds === 0 ? "wyłączony" : report.timerSeconds + " s") +
         " | Limit błędów: " + (report.maxMistakes === 0 ? "brak" : report.maxMistakes) +
@@ -1472,6 +1475,7 @@ Powód: ${item.reason}`).join("\n\n");
 `Raport gry
 Tytul: ${r.title}
 Zestaw: ${r.setName}
+Klasa: ${r.classLabel || ""}
 Uczen: ${r.studentName}
 Data: ${r.date}
 Poprawne wyrazy: ${r.correctCount}
@@ -1494,8 +1498,8 @@ ${wrongText}`;
       ).join(" | ");
 
       const csv =
-`tytul,zestaw,uczen,data,poprawne_wyrazy,bledy,ukonczone_zdania,wszystkie_zdania,skutecznosc,poziom,timer,limit_bledow,bledne_zdania
-"${r.title}","${r.setName}","${r.studentName}","${r.date}",${r.correctCount},${r.wrongCount},${r.finishedCount},${r.totalSentences},${r.accuracy},"${r.difficulty}",${r.timerSeconds},${r.maxMistakes},"${wrongJoined.replace(/"/g, '""')}"`;
+`tytul,zestaw,klasa,uczen,data,poprawne_wyrazy,bledy,ukonczone_zdania,wszystkie_zdania,skutecznosc,poziom,timer,limit_bledow,bledne_zdania
+"${r.title}","${r.setName}","${r.classLabel || ""}","${r.studentName}","${r.date}",${r.correctCount},${r.wrongCount},${r.finishedCount},${r.totalSentences},${r.accuracy},"${r.difficulty}",${r.timerSeconds},${r.maxMistakes},"${wrongJoined.replace(/"/g, '""')}"`;
       downloadFile("raport_wynikow.csv", csv, "text/csv;charset=utf-8");
     }
 
