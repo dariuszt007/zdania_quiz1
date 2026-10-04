@@ -42,8 +42,8 @@
     },
     {
       "id": "english_polish_basic_copy",
-      "name": "English -> Polski podstawy kopia",
-      "classLabel": "5B",
+      "name": "English -> Polski sredni",
+      "classLabel": "5A",
       "theme": "school",
       "pairs": [
         {
