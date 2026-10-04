@@ -223,272 +223,359 @@
         grid-template-columns:1fr;
       }
     }
+
+    .login-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(2,6,23,.96);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:9999;
+      padding:20px;
+    }
+    .login-box{
+      width:min(460px, 100%);
+      background:#111827;
+      border:1px solid rgba(255,255,255,.1);
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 20px 50px rgba(0,0,0,.45);
+    }
+    .login-box h2{
+      margin-top:0;
+      margin-bottom:10px;
+    }
+    .login-error{
+      margin-top:12px;
+      min-height:22px;
+      color:#fca5a5;
+      font-weight:bold;
+    }
+
+    #teacherPanel{
+      display:none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="topbar">
-      <div>
-        <div class="title">Panel nauczyciela B+++ Teacher PRO custom class</div>
-        <div class="small">Panel startuje od aktualnej zawartości pliku sentences.json.</div>
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-box">
+      <h2>Wejście do panelu nauczyciela</h2>
+      <div class="small">Aby wejść do panelu, wpisz hasło.</div>
+
+      <div style="margin-top:14px;">
+        <label for="teacherPassword">Hasło</label>
+        <input id="teacherPassword" type="password" placeholder="Wpisz hasło" />
       </div>
-      <a href="index.html">Otwórz grę studenta</a>
+
+      <div class="actions">
+        <button class="primary" id="loginBtn">Wejdź</button>
+        <a href="index.html" style="text-decoration:none;">
+          <button type="button" class="secondary">Wróć do gry</button>
+        </a>
+      </div>
+
+      <div class="login-error" id="loginError"></div>
     </div>
+  </div>
 
-    <div class="grid">
-      <div class="card">
-        <h2>1. Ustawienia globalne gry</h2>
-
-        <div class="row">
-          <div>
-            <label for="gameTitle">Tytuł gry</label>
-            <input id="gameTitle" type="text" value="Tłumaczenie zdań EN-PL" />
-          </div>
-          <div>
-            <label for="difficulty">Poziom trudności</label>
-            <select id="difficulty">
-              <option value="easy">Łatwy</option>
-              <option value="medium" selected>Średni</option>
-              <option value="hard">Trudny</option>
-            </select>
-          </div>
+  <div id="teacherPanel">
+    <div class="container">
+      <div class="topbar">
+        <div>
+          <div class="title">Panel nauczyciela B+++ Teacher PRO custom class</div>
+          <div class="small">Panel startuje od aktualnej zawartości pliku sentences.json.</div>
         </div>
-
-        <div class="row-3">
-          <div>
-            <label for="defaultClassLabel">Domyślna klasa / grupa</label>
-            <input id="defaultClassLabel" type="text" value="5A" placeholder="Np. 5A, 2B, grupa początkująca" />
-          </div>
-          <div>
-            <label for="sourceLanguageLabel">Język źródłowy</label>
-            <input id="sourceLanguageLabel" type="text" value="English" />
-          </div>
-          <div>
-            <label for="targetLanguageLabel">Język docelowy</label>
-            <input id="targetLanguageLabel" type="text" value="Polski" />
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="warning" id="swapAllLanguagesBtn">Zamień języki we wszystkich zestawach</button>
-        </div>
-
-        <div class="row-3">
-          <div>
-            <label for="spawnRate">Czas pojawiania się kafelków</label>
-            <select id="spawnRate">
-              <option value="1500">Wolno</option>
-              <option value="1100" selected>Normalnie</option>
-              <option value="800">Szybko</option>
-            </select>
-          </div>
-          <div>
-            <label for="timerSeconds">Timer</label>
-            <select id="timerSeconds">
-              <option value="0">Bez timera</option>
-              <option value="30">30 sekund</option>
-              <option value="45" selected>45 sekund</option>
-              <option value="60">60 sekund</option>
-              <option value="90">90 sekund</option>
-            </select>
-          </div>
-          <div>
-            <label for="maxMistakes">Maksymalna liczba błędów</label>
-            <select id="maxMistakes">
-              <option value="0">Bez limitu</option>
-              <option value="3">3</option>
-              <option value="5" selected>5</option>
-              <option value="10">10</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row-3">
-          <div>
-            <label for="randomOrder">Kolejność zdań</label>
-            <select id="randomOrder">
-              <option value="false" selected>Po kolei</option>
-              <option value="true">Losowo</option>
-            </select>
-          </div>
-          <div>
-            <label for="autoNextSeconds">Auto dalej</label>
-            <select id="autoNextSeconds">
-              <option value="0">Wyłączone</option>
-              <option value="2">2 sekundy</option>
-              <option value="3" selected>3 sekundy</option>
-              <option value="5">5 sekund</option>
-            </select>
-          </div>
-          <div>
-            <label for="distractorCount">Liczba mylących kafelków</label>
-            <select id="distractorCount">
-              <option value="2">2</option>
-              <option value="4" selected>4</option>
-              <option value="6">6</option>
-              <option value="8">8</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row-3">
-          <div>
-            <label for="punctuationMode">Interpunkcja</label>
-            <select id="punctuationMode">
-              <option value="auto" selected>Automatycznie</option>
-              <option value="tiles">Jako kafelki</option>
-            </select>
-          </div>
-          <div>
-            <label for="studentNameMode">Wymagane imię ucznia</label>
-            <select id="studentNameMode">
-              <option value="true" selected>Tak</option>
-              <option value="false">Nie</option>
-            </select>
-          </div>
-          <div>
-            <label for="showSetPicker">Wybór zestawu na starcie</label>
-            <select id="showSetPicker">
-              <option value="true" selected>Tak</option>
-              <option value="false">Nie</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row-3">
-          <div>
-            <label for="allowHint">Podpowiedź</label>
-            <select id="allowHint">
-              <option value="true" selected>Tak</option>
-              <option value="false">Nie</option>
-            </select>
-          </div>
-          <div>
-            <label for="allowSolution">Pokaż rozwiązanie</label>
-            <select id="allowSolution">
-              <option value="true">Tak</option>
-              <option value="false" selected>Nie</option>
-            </select>
-          </div>
-          <div>
-            <label for="showTranslationInstruction">Instrukcja tłumaczenia</label>
-            <select id="showTranslationInstruction">
-              <option value="true" selected>Tak</option>
-              <option value="false">Nie</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row-3">
-          <div>
-            <label for="soundEnabled">Dźwięki</label>
-            <select id="soundEnabled">
-              <option value="true" selected>Tak</option>
-              <option value="false">Nie</option>
-            </select>
-          </div>
-        </div>
+        <a href="index.html">Otwórz grę studenta</a>
       </div>
 
-      <div class="card">
-        <h2>2. Nowy zestaw</h2>
+      <div class="grid">
+        <div class="card">
+          <h2>1. Ustawienia globalne gry</h2>
 
-        <div class="row">
-          <div>
-            <label for="newSetId">ID zestawu</label>
-            <input id="newSetId" type="text" placeholder="Np. class5a" />
+          <div class="row">
+            <div>
+              <label for="gameTitle">Tytuł gry</label>
+              <input id="gameTitle" type="text" value="Tłumaczenie zdań EN-PL" />
+            </div>
+            <div>
+              <label for="difficulty">Poziom trudności</label>
+              <select id="difficulty">
+                <option value="easy">Łatwy</option>
+                <option value="medium" selected>Średni</option>
+                <option value="hard">Trudny</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <label for="newSetName">Nazwa zestawu</label>
-            <input id="newSetName" type="text" placeholder="Np. Klasa 5A" />
+
+          <div class="row-3">
+            <div>
+              <label for="defaultClassLabel">Domyślna klasa / grupa</label>
+              <input id="defaultClassLabel" type="text" value="5A" placeholder="Np. 5A, 2B, grupa początkująca" />
+            </div>
+            <div>
+              <label for="sourceLanguageLabel">Język źródłowy</label>
+              <input id="sourceLanguageLabel" type="text" value="English" />
+            </div>
+            <div>
+              <label for="targetLanguageLabel">Język docelowy</label>
+              <input id="targetLanguageLabel" type="text" value="Polski" />
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="warning" id="swapAllLanguagesBtn">Zamień języki we wszystkich zestawach</button>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="spawnRate">Czas pojawiania się kafelków</label>
+              <select id="spawnRate">
+                <option value="1500">Wolno</option>
+                <option value="1100" selected>Normalnie</option>
+                <option value="800">Szybko</option>
+              </select>
+            </div>
+            <div>
+              <label for="timerSeconds">Timer</label>
+              <select id="timerSeconds">
+                <option value="0">Bez timera</option>
+                <option value="30">30 sekund</option>
+                <option value="45" selected>45 sekund</option>
+                <option value="60">60 sekund</option>
+                <option value="90">90 sekund</option>
+              </select>
+            </div>
+            <div>
+              <label for="maxMistakes">Maksymalna liczba błędów</label>
+              <select id="maxMistakes">
+                <option value="0">Bez limitu</option>
+                <option value="3">3</option>
+                <option value="5" selected>5</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="randomOrder">Kolejność zdań</label>
+              <select id="randomOrder">
+                <option value="false" selected>Po kolei</option>
+                <option value="true">Losowo</option>
+              </select>
+            </div>
+            <div>
+              <label for="autoNextSeconds">Auto dalej</label>
+              <select id="autoNextSeconds">
+                <option value="0">Wyłączone</option>
+                <option value="2">2 sekundy</option>
+                <option value="3" selected>3 sekundy</option>
+                <option value="5">5 sekund</option>
+              </select>
+            </div>
+            <div>
+              <label for="distractorCount">Liczba mylących kafelków</label>
+              <select id="distractorCount">
+                <option value="2">2</option>
+                <option value="4" selected>4</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="punctuationMode">Interpunkcja</label>
+              <select id="punctuationMode">
+                <option value="auto" selected>Automatycznie</option>
+                <option value="tiles">Jako kafelki</option>
+              </select>
+            </div>
+            <div>
+              <label for="studentNameMode">Wymagane imię ucznia</label>
+              <select id="studentNameMode">
+                <option value="true" selected>Tak</option>
+                <option value="false">Nie</option>
+              </select>
+            </div>
+            <div>
+              <label for="showSetPicker">Wybór zestawu na starcie</label>
+              <select id="showSetPicker">
+                <option value="true" selected>Tak</option>
+                <option value="false">Nie</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="allowHint">Podpowiedź</label>
+              <select id="allowHint">
+                <option value="true" selected>Tak</option>
+                <option value="false">Nie</option>
+              </select>
+            </div>
+            <div>
+              <label for="allowSolution">Pokaż rozwiązanie</label>
+              <select id="allowSolution">
+                <option value="true">Tak</option>
+                <option value="false" selected>Nie</option>
+              </select>
+            </div>
+            <div>
+              <label for="showTranslationInstruction">Instrukcja tłumaczenia</label>
+              <select id="showTranslationInstruction">
+                <option value="true" selected>Tak</option>
+                <option value="false">Nie</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row-3">
+            <div>
+              <label for="soundEnabled">Dźwięki</label>
+              <select id="soundEnabled">
+                <option value="true" selected>Tak</option>
+                <option value="false">Nie</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        <div class="row">
-          <div>
-            <label for="newSetClassLabel">Klasa / grupa</label>
-            <input id="newSetClassLabel" type="text" placeholder="Np. 5A, 2B, grupa początkująca" />
-          </div>
-          <div>
-            <label for="newSetTheme">Temat</label>
-            <input id="newSetTheme" type="text" placeholder="Np. school / daily life / animals" />
-          </div>
-        </div>
+        <div class="card">
+          <h2>2. Nowy zestaw</h2>
 
-        <label for="newSetPairs" style="margin-top:12px;">Pary zdań</label>
-        <textarea id="newSetPairs" placeholder="Każda linia:
+          <div class="row">
+            <div>
+              <label for="newSetId">ID zestawu</label>
+              <input id="newSetId" type="text" placeholder="Np. class5a" />
+            </div>
+            <div>
+              <label for="newSetName">Nazwa zestawu</label>
+              <input id="newSetName" type="text" placeholder="Np. Klasa 5A" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="newSetClassLabel">Klasa / grupa</label>
+              <input id="newSetClassLabel" type="text" placeholder="Np. 5A, 2B, grupa początkująca" />
+            </div>
+            <div>
+              <label for="newSetTheme">Temat</label>
+              <input id="newSetTheme" type="text" placeholder="Np. school / daily life / animals" />
+            </div>
+          </div>
+
+          <label for="newSetPairs" style="margin-top:12px;">Pary zdań</label>
+          <textarea id="newSetPairs" placeholder="Każda linia:
 I like apples. = Lubię jabłka.
 How are you? = Jak się masz?"></textarea>
 
+          <div class="actions">
+            <button class="primary" id="addSetBtn">Dodaj zestaw</button>
+            <button class="warning" id="loadDemoSetsBtn">Wstaw przykładowe zestawy</button>
+            <button class="secondary" id="importCsvBtn">Import CSV</button>
+            <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display:none" />
+            <button class="danger" id="clearNewSetBtn">Wyczyść pola</button>
+          </div>
+
+          <div class="note small">
+            CSV powinno mieć kolumny:
+            <br><code>setId,setName,classLabel,theme,source,target</code>
+          </div>
+
+          <div class="message info" id="message">Ładowanie danych...</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h2>3. Filtry zestawów</h2>
+        <div class="filter-bar">
+          <div>
+            <label for="filterClassLabel">Filtr klasy / grupy</label>
+            <input id="filterClassLabel" type="text" placeholder="Np. 5A" />
+          </div>
+          <div>
+            <label for="filterTheme">Filtr tematu</label>
+            <input id="filterTheme" type="text" placeholder="Np. school" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="secondary" id="clearFiltersBtn" style="width:100%;">Wyczyść filtry</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <h2>4. Zestawy tłumaczeń</h2>
+        <div>
+          <span class="pill">Własna klasa</span>
+          <span class="pill">Edytor tabelkowy</span>
+          <span class="pill">CSV</span>
+          <span class="pill">Zamiana języków</span>
+        </div>
+
         <div class="actions">
-          <button class="primary" id="addSetBtn">Dodaj zestaw</button>
-          <button class="warning" id="loadDemoSetsBtn">Wstaw przykładowe zestawy</button>
-          <button class="secondary" id="importCsvBtn">Import CSV</button>
-          <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display:none" />
-          <button class="danger" id="clearNewSetBtn">Wyczyść pola</button>
+          <button class="success" id="addEmptySetBtn">Dodaj pusty zestaw</button>
+          <button class="secondary" id="sortSetsBtn">Sortuj zestawy A-Z</button>
+          <button class="danger" id="clearSetsBtn">Usuń wszystkie zestawy</button>
         </div>
 
-        <div class="note small">
-          CSV powinno mieć kolumny:
-          <br><code>setId,setName,classLabel,theme,source,target</code>
-        </div>
-
-        <div class="message info" id="message">Ładowanie danych...</div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:16px;">
-      <h2>3. Filtry zestawów</h2>
-      <div class="filter-bar">
-        <div>
-          <label for="filterClassLabel">Filtr klasy / grupy</label>
-          <input id="filterClassLabel" type="text" placeholder="Np. 5A" />
-        </div>
-        <div>
-          <label for="filterTheme">Filtr tematu</label>
-          <input id="filterTheme" type="text" placeholder="Np. school" />
-        </div>
-        <div>
-          <label>&nbsp;</label>
-          <button class="secondary" id="clearFiltersBtn" style="width:100%;">Wyczyść filtry</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-top:16px;">
-      <h2>4. Zestawy tłumaczeń</h2>
-      <div>
-        <span class="pill">Własna klasa</span>
-        <span class="pill">Edytor tabelkowy</span>
-        <span class="pill">CSV</span>
-        <span class="pill">Zamiana języków</span>
+        <div id="setList" class="set-list"></div>
+        <div id="stats" class="small" style="margin-top:10px;">Liczba zestawów: 0</div>
       </div>
 
-      <div class="actions">
-        <button class="success" id="addEmptySetBtn">Dodaj pusty zestaw</button>
-        <button class="secondary" id="sortSetsBtn">Sortuj zestawy A-Z</button>
-        <button class="danger" id="clearSetsBtn">Usuń wszystkie zestawy</button>
-      </div>
+      <div class="card" style="margin-top:16px;">
+        <h2>5. Podgląd pliku JSON</h2>
+        <textarea id="jsonOutput" class="json-output" readonly></textarea>
 
-      <div id="setList" class="set-list"></div>
-      <div id="stats" class="small" style="margin-top:10px;">Liczba zestawów: 0</div>
-    </div>
-
-    <div class="card" style="margin-top:16px;">
-      <h2>5. Podgląd pliku JSON</h2>
-      <textarea id="jsonOutput" class="json-output" readonly></textarea>
-
-      <div class="actions">
-        <button class="primary" id="previewBtn">Odśwież JSON</button>
-        <button class="success" id="downloadBtn">Pobierz sentences.json</button>
-        <button class="secondary" id="copyBtn">Kopiuj JSON</button>
-        <button class="secondary" id="importBtn">Wczytaj istniejący JSON</button>
-        <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
+        <div class="actions">
+          <button class="primary" id="previewBtn">Odśwież JSON</button>
+          <button class="success" id="downloadBtn">Pobierz sentences.json</button>
+          <button class="secondary" id="copyBtn">Kopiuj JSON</button>
+          <button class="secondary" id="importBtn">Wczytaj istniejący JSON</button>
+          <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
+        </div>
       </div>
     </div>
   </div>
 
   <script>
+    const TEACHER_PASSWORD = "1111";
+
+    const loginOverlay = document.getElementById("loginOverlay");
+    const teacherPanel = document.getElementById("teacherPanel");
+    const teacherPassword = document.getElementById("teacherPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginError = document.getElementById("loginError");
+
+    function unlockTeacherPanel(){
+      loginOverlay.style.display = "none";
+      teacherPanel.style.display = "block";
+      teacherPassword.value = "";
+      loginError.textContent = "";
+    }
+
+    function tryLogin(){
+      if(teacherPassword.value === TEACHER_PASSWORD){
+        unlockTeacherPanel();
+      } else {
+        loginError.textContent = "Niepoprawne hasło.";
+        teacherPassword.select();
+      }
+    }
+
+    loginBtn.addEventListener("click", tryLogin);
+    teacherPassword.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        tryLogin();
+      }
+    });
+
     const demoSets = [
       {
         id: "english_polish_basic",
