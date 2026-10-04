@@ -47,16 +47,8 @@
       "theme": "school",
       "pairs": [
         {
-          "source": "I like apples.",
-          "target": "Lubię jabłka."
-        },
-        {
-          "source": "She is my friend.",
-          "target": "Ona jest moją przyjaciółką."
-        },
-        {
-          "source": "We go to school every day.",
-          "target": "Chodzimy do szkoły codziennie."
+          "source": "Lubię jabłka.",
+          "target": "I like apples."
         }
       ]
     },
