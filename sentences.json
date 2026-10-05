@@ -1,5 +1,5 @@
 {
-  "title": "Make sentences!",
+  "title": "Sentences!",
   "settings": {
     "difficulty": "easy",
     "defaultClassLabel": "Grade 1",
@@ -73,6 +73,54 @@
         {
           "source": "あなたのお姉さん（妹さん）は何歳ですか？",
           "target": "How old is your sister?"
+        },
+        {
+          "source": "何のスポーツが好きですか？",
+          "target": "What sports do you like?"
+        },
+        {
+          "source": "あなたの家族では誰が夕食を作りますか？",
+          "target": "Who makes dinner in your family?"
+        },
+        {
+          "source": "誰を待っているのですか？",
+          "target": "Who are you waiting for?"
+        },
+        {
+          "source": "チームのキャプテンは誰ですか？",
+          "target": "Who is the captain of the team?"
+        },
+        {
+          "source": "あなたは何を聴いているのですか？",
+          "target": "What are you listening to"
+        },
+        {
+          "source": "あなたの将来の夢は何ですか",
+          "target": "What is your dream for the future?"
+        },
+        {
+          "source": "あなたの教科書はどこにありますか？",
+          "target": "Where is your textbook?"
+        },
+        {
+          "source": "どこでピアノを練習しているのですか？",
+          "target": "Where do you practice the piano?"
+        },
+        {
+          "source": "一番近いコンビニはどこですか？",
+          "target": "Where is the nearest convenience store?"
+        },
+        {
+          "source": "あなたの名前はどのように綴りますか？ / スペルは何ですか？",
+          "target": "How do you spell your name?"
+        },
+        {
+          "source": "鉛筆を何本持っていますか？",
+          "target": "How many pencils do you have?"
+        },
+        {
+          "source": "今日のロンドンの天気はどうですか？",
+          "target": "How is the weather in London today?"
         }
       ]
     }
